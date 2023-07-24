@@ -1,3 +1,5 @@
 guide_config.py
 _log/
 __pycache__/
+_input/
+_output/

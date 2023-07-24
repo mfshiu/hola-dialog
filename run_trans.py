@@ -1,6 +1,7 @@
 import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
+import multiprocessing
 import signal
 
 from holon import config
@@ -28,6 +29,7 @@ if __name__ == '__main__':
     os.environ["OPENAI_API_KEY"] = guide_config.openai_api_key
     
     Helper.init_logging(log_dir=cfg.log_dir, log_level=cfg.log_level)
+    # multiprocessing.set_start_method('spawn')
 
     a = Transcriptionist(cfg)
     a.start()

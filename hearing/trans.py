@@ -12,10 +12,6 @@ from holon.HolonicAgent import HolonicAgent
 import Helper
 from Helper import logger
 
-device = "cuda" if torch.cuda.is_available() else "cpu"
-# whisper.DecodingOptions(language="zh")
-whisper_model = whisper.load_model("small", device=device)
-# whisper_model = whisper.load_model("medium", device=device)
 
 class Transcriptionist(HolonicAgent):
     def __init__(self, cfg):
@@ -41,8 +37,15 @@ class Transcriptionist(HolonicAgent):
 
     def _run_begin(self):
         super()._run_begin()
-        logger.info(f"device:{device}")
+
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+        logger.warning(f'Device of Whisper:{device}')
         self.wave_queue = queue.Queue()
+
+        # whisper.DecodingOptions(language="zh")
+        self.whisper_model = whisper.load_model("small", device=device)
+        # whisper_model = whisper.load_model("medium", device=device)
+        logger.info(f'Whisper model is loaded.')
 
 
     def _running(self):
@@ -52,10 +55,11 @@ class Transcriptionist(HolonicAgent):
                 continue
             try:
                 wave_path = self.wave_queue.get()
-                result = whisper_model.transcribe(wave_path)
+                logger.debug(f'transcribe path:{wave_path}')
+                result = self.whisper_model.transcribe(wave_path)
                 # transcribed_text = str(result["text"].encode('utf-8'))[2:-1].strip()
                 transcribed_text = result["text"]
-                print(f'running addr: {self._config.mqtt_address}')
+                # print(f'running addr: {self._config.mqtt_address}')
                 self.publish("hearing.trans.text", transcribed_text)        
                 logger.info(f">>> \033[33m{transcribed_text}\033[0m")
                 if os.path.exists(wave_path):
