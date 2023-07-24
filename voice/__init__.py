@@ -3,6 +3,7 @@ from datetime import datetime as dt
 
 from TTS.api import TTS
 
+import guide_config
 from holon import logger
 from holon.HolonicAgent import HolonicAgent
 from voice.speaker import Speaker
@@ -25,8 +26,11 @@ class Voice(HolonicAgent):
 
     def _on_topic(self, topic, data):
         if "voice.text" == topic:
-            filepath = dt.now().strftime("tests/_output/voice-%m%d-%H%M-%S.wav")
-            logger.debug(f"voice_path:{filepath}")
+
+            filename = dt.now().strftime(f"speak-%m%d-%H%M-%S.wav")
+            filepath = os.path.join(guide_config.output_dir, filename)
+            # filepath = dt.now().strftime("tests/_output/voice-%m%d-%H%M-%S.wav")
+            logger.debug(f"speak_path:{filepath}")
             try:
                 self.tts.tts_to_file(text=data, file_path=filepath)
                 with open(filepath, "rb") as file:

@@ -147,7 +147,6 @@ class Microphone(HolonicAgent):
     def _running(self):
         while self.is_running():
             try:
-                # filepath = self._record()
                 filepath = self._record2()
                 # if filepath:
                     # with open(filepath, "rb") as file:
@@ -158,43 +157,6 @@ class Microphone(HolonicAgent):
                     # self.publish("microphone.wave_path", filepath)
             except Exception as ex:
                 logger.exception(ex)
-
-
-    def _record(self):
-        # 初始化Pyaudio
-        audio = pyaudio.PyAudio()
-
-        # 开始录制音频
-        stream = audio.open(format=FORMAT, channels=CHANNELS,
-                            rate=RATE, input=True,
-                            frames_per_buffer=CHUNK)
-
-        frames = []
-        logger.info("Start recording")
-        for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
-            if (self.is_running()):
-                # print(".", end="")
-                data = stream.read(CHUNK)
-                frames.append(data)
-
-        # 停止录制音频
-        stream.stop_stream()
-        stream.close()
-        audio.terminate()
-
-        filepath = dt.now().strftime("tests/_output/record-%m%d-%H%M-%S.wav")
-        def write_wave_file(filepath, wave_data):
-            logger.debug("Write to file")
-            wf = wave.open(filepath, 'wb')
-            wf.setnchannels(CHANNELS)
-            wf.setsampwidth(audio.get_sample_size(FORMAT))
-            wf.setframerate(RATE)
-            wf.writeframes(wave_data)
-            wf.close()
-        # threading.Thread(target=write_wave_file, args=(filepath, b''.join(frames),)).start()
-        write_wave_file(filepath, b''.join(frames))
-
-        return filepath
 
 
 if __name__ == '__main__':

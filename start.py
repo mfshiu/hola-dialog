@@ -11,9 +11,8 @@ from holon import config
 
 
 if __name__ == '__main__':
-    # Helper.init_logging()
-    # logging.info('***** Main start *****')
-    print('***** Main start *****')
+    logger = Helper.init_logging(log_dir=guide_config.log_dir, log_level=guide_config.log_level)
+    logger.info(f'***** GuideMain start *****')
 
     def signal_handler(signal, frame):
         print("signal_handler")
@@ -25,11 +24,7 @@ if __name__ == '__main__':
     cfg.mqtt_keepalive = guide_config.mqtt_keepalive
     cfg.mqtt_username = guide_config.mqtt_username
     cfg.mqtt_password = guide_config.mqtt_password
-    cfg.log_level = guide_config.log_level
-    cfg.log_dir = guide_config.log_dir    
     os.environ["OPENAI_API_KEY"] = guide_config.openai_api_key
-
-    Helper.init_logging(log_dir='_log')
 
     a = GuideMain(cfg)
     a.start()
