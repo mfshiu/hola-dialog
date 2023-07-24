@@ -1,8 +1,8 @@
 import ast
 import threading
 
-from src.holon import logger
-from src.holon.HolonicAgent import HolonicAgent
+from holon import logger
+from holon.HolonicAgent import HolonicAgent
 from brain import brain_helper
 
 

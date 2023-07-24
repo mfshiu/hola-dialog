@@ -1,4 +1,4 @@
-from src.holon import logger
+from holon import logger
 
 
 def speak(agent, sentence):

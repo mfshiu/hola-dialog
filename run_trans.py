@@ -1,19 +1,9 @@
 import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
-import logging
 import signal
 
-from src.holon import Helper
-from src.holon import config
-from src.holon.HolonicAgent import HolonicAgent
-
-from src.holon.HolonicAgent import HolonicAgent
-# from visual.Visual import Visual
-from hearing import Hearing
-# from voice.Voice import Voice
-from navi import Navigator
-# from dialog import DialogSystem
+from holon import config
 import guide_config
 from hearing.trans import Transcriptionist
 

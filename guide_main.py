@@ -5,11 +5,9 @@ import logging
 from logging.handlers import TimedRotatingFileHandler
 import signal
 
-from src.holon import Helper
-from src.holon import config
-from src.holon.HolonicAgent import HolonicAgent
+from holon import config
+from holon.HolonicAgent import HolonicAgent
 
-from src.holon.HolonicAgent import HolonicAgent
 # from visual.Visual import Visual
 from hearing import Hearing
 from voice import Voice

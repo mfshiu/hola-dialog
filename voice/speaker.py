@@ -2,12 +2,10 @@ from datetime import datetime as dt
 import logging
 import os
 
-import wave
-import pyaudio
 from playsound import playsound
 
-from src.holon.HolonicAgent import HolonicAgent
-from src.holon import logger
+from holon.HolonicAgent import HolonicAgent
+from holon import logger
 
 
 class Speaker(HolonicAgent):

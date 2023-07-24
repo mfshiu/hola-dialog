@@ -1,8 +1,7 @@
 import ast
 
-from src.holon import logger
-from src.holon.HolonicAgent import HolonicAgent
-from brain import brain_helper
+from holon import logger
+from holon.HolonicAgent import HolonicAgent
 
 
 class Controller(HolonicAgent):

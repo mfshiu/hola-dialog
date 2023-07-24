@@ -4,12 +4,12 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(
 from datetime import datetime as dt
 import threading
 
-from src.holon import logger
 import numpy as np
 import pyaudio
 import wave
 
-from src.holon.HolonicAgent import HolonicAgent
+from Helper import logger
+from holon.HolonicAgent import HolonicAgent
 
 # 配置音频录制参数
 CHUNK = 2048

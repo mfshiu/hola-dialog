@@ -4,18 +4,10 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 import logging
 import signal
 
-from src.holon import Helper
-from src.holon import config
-from src.holon.HolonicAgent import HolonicAgent
-
-from src.holon.HolonicAgent import HolonicAgent
-# from visual.Visual import Visual
-from hearing import Hearing
-# from voice.Voice import Voice
+import Helper
+from holon import config
 from navi import Navigator
-# from dialog import DialogSystem
 import guide_config
-# from hearing.trans import Transcriptionist
 
 
 if __name__ == '__main__':
@@ -37,8 +29,7 @@ if __name__ == '__main__':
     cfg.log_dir = guide_config.log_dir    
     os.environ["OPENAI_API_KEY"] = guide_config.openai_api_key
 
+    Helper.init_logging(log_dir='_log')
+
     a = Navigator(cfg)
     a.start()
-
-    # time.sleep(5)
-    # a.terminate()

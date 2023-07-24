@@ -3,8 +3,8 @@ from datetime import datetime as dt
 
 from TTS.api import TTS
 
-from src.holon import logger
-from src.holon.HolonicAgent import HolonicAgent
+from holon import logger
+from holon.HolonicAgent import HolonicAgent
 from voice.speaker import Speaker
 
 class Voice(HolonicAgent):

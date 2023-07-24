@@ -1,5 +1,5 @@
-from src.holon import logger
-from src.holon.HolonicAgent import HolonicAgent
+from holon import logger
+from holon.HolonicAgent import HolonicAgent
 from brain.navi import Navigator
 from brain.greeting import Greeting
 from brain.controller import Controller

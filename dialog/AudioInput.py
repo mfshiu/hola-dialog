@@ -7,8 +7,8 @@ import time
 import whisper
 import torch
 
-from src.holon import logger
-from src.holon.HolonicAgent import HolonicAgent
+from holon import logger
+from holon.HolonicAgent import HolonicAgent
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 # whisper.DecodingOptions(language="zh")

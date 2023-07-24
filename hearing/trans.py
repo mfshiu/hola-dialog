@@ -7,9 +7,8 @@ import time
 import whisper
 import torch
 
-from src.holon.HolonicAgent import HolonicAgent
-from src.holon import config, logger
-import guide_config
+from holon.HolonicAgent import HolonicAgent
+from Helper import logger
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 # whisper.DecodingOptions(language="zh")
@@ -35,20 +34,6 @@ class Transcriptionist(HolonicAgent):
             with open(wave_path, "wb") as file:
                 file.write(msg.payload)
             self.wave_queue.put(wave_path)
-
-        # super()._on_topic(topic, data)
-
-
-    # def _on_topic(self, topic, data):
-    #     if "hearing.voice" == topic:
-    #         # logging.debug(f"wave_path:{data}")
-    #         wave_path = dt.now().strftime("tests/_input/voice-%m%d-%H%M-%S.wav")
-    #         logging.debug(f'data: {data}')
-    #         with open(wave_path, "wb") as file:
-    #             file.write(data)
-    #         self.wave_queue.put(wave_path)
-
-    #     super()._on_topic(topic, data)
 
 
     def _run_begin(self):

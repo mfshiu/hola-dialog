@@ -1,4 +1,4 @@
-from src.holon.HolonicAgent import HolonicAgent
+from holon.HolonicAgent import HolonicAgent
 
 
 class VisualInput(HolonicAgent):
