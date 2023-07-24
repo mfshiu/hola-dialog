@@ -53,7 +53,7 @@ def understand(prompt, last_sentence=None):
     global _positivity
     global _classification
 
-    print(f"openai.api_key: {openai.api_key}")
+    # print(f"openai.api_key: {openai.api_key}")
         
 
     def analyze_positivity(user_prompt):

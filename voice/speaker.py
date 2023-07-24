@@ -4,6 +4,7 @@ import os
 
 from playsound import playsound
 
+import guide_config
 from holon.HolonicAgent import HolonicAgent
 from holon import logger
 
@@ -22,7 +23,9 @@ class Speaker(HolonicAgent):
     def _on_message(self, client, db, msg):
         if "voice.wave" == msg.topic:
             try:
-                filepath = dt.now().strftime("tests/_output/wave-%m%d-%H%M-%S.wav")
+                filename = dt.now().strftime(f"wave-%m%d-%H%M-%S.wav")
+                filepath = os.path.join(guide_config.output_dir, filename)
+                # filepath = dt.now().strftime("tests/_output/wave-%m%d-%H%M-%S.wav")
                 with open(filepath, "wb") as file:
                     file.write(msg.payload)
                 playsound(filepath)
