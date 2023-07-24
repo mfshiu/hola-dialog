@@ -28,6 +28,7 @@ class Speaker(HolonicAgent):
                 # filepath = dt.now().strftime("tests/_output/wave-%m%d-%H%M-%S.wav")
                 with open(filepath, "wb") as file:
                     file.write(msg.payload)
+                logger.debug(f'playsound: {filepath}')
                 playsound(filepath)
                 os.remove(filepath)
             except Exception as ex:

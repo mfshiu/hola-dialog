@@ -22,6 +22,7 @@ class Greeting(HolonicAgent):
     def _on_topic(self, topic, data):
         if "greeting.knowledge" == topic:
             knowledge = ast.literal_eval(data)
+            # logger.info(f'############### {knowledge}')
             if knowledge[0][1] == 'normal':
                 brain_helper.speak(self, f'Hello, have a good day.')
             elif knowledge[0][1] == 'happy':
