@@ -3,3 +3,4 @@ _log/
 __pycache__/
 _input/
 _output/
+voice/__pycache__/Speaker.cpython-310.pyc
