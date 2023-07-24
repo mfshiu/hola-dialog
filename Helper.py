@@ -8,6 +8,12 @@ from pathlib import Path
 logger = logging.getLogger('ABDI')
 
 
+def ensure_directory(dir_path):
+    if not os.path.exists(dir_path):
+        os.mkdir(dir_path)
+        logger.info(f"Directory '{dir_path}' created successfully.")
+
+
 def init_logging(log_dir, log_level=logging.DEBUG):
     formatter = logging.Formatter(
         '%(levelname)1.1s %(asctime)s %(module)15s:%(lineno)03d %(funcName)15s) %(message)s',

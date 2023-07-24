@@ -8,8 +8,10 @@ import numpy as np
 import pyaudio
 import wave
 
+import Helper
 from Helper import logger
 from holon.HolonicAgent import HolonicAgent
+import guide_config
 
 # 配置音频录制参数
 CHUNK = 2048
@@ -22,6 +24,7 @@ SILENCE_THRESHOLD = (RATE // CHUNK) * 0.28
 
 class Microphone(HolonicAgent):
     def __init__(self, cfg=None):
+        Helper.ensure_directory(guide_config.output_dir)
         super().__init__(cfg)
 
 
@@ -36,13 +39,6 @@ class Microphone(HolonicAgent):
         data = [x for x in to_shorts(frames) if x >= 0]
         audio_mean = 0 if len(data) == 0 else sum([int(x) for x in data]) // len(data)
         return audio_mean
-
-
-    # def __is_silence(sound_raw):
-    #     audio_mean = Microphone.__compute_frames_mean(sound_raw)
-    #     #logging.debug(f'audio_mean: {audio_mean}')
-
-    #     return (audio_mean < 200, audio_mean)
     
 
     def __wait_voice(self, audio_stream):
@@ -138,7 +134,9 @@ class Microphone(HolonicAgent):
                 #playsound(wave_path)
                 #os.remove(wave_path)
 
-            wave_path = dt.now().strftime("tests/_output/record-%m%d-%H%M-%S.wav")
+            filename = dt.now().strftime(f"record-%m%d-%H%M-%S.wav")
+            wave_path = os.path.join(guide_config.output_dir, filename)
+            # wave_path = dt.now().strftime(f"tests/_output/record-%m%d-%H%M-%S.wav")
             threading.Thread(target=write_wave_file, args=(wave_path, b''.join(frames),)).start()
             # self.publish("microphone.wave_path", wave_path)
             # write_wave_file(wave_path, b''.join(frames))
