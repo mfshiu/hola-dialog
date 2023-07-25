@@ -7,7 +7,7 @@ mqtt_username = "user"
 mqtt_password = "password"
 
 log_level = logging.DEBUG
-log_dir = "C:\\temp\\_log"
+log_dir = "_log"
 input_dir = '_input'
 output_dir = '_output'
 
