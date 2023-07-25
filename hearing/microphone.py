@@ -8,8 +8,8 @@ import numpy as np
 import pyaudio
 import wave
 
-import Helper
-from Helper import logger
+import helper
+from helper import logger
 from holon.HolonicAgent import HolonicAgent
 import guide_config
 
@@ -24,7 +24,7 @@ SILENCE_THRESHOLD = (RATE // CHUNK) * 0.28
 
 class Microphone(HolonicAgent):
     def __init__(self, cfg=None):
-        Helper.ensure_directory(guide_config.output_dir)
+        helper.ensure_directory(guide_config.output_dir)
         super().__init__(cfg)
 
 

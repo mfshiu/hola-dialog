@@ -1,6 +1,6 @@
 import os, sys
 
-from Helper import logger
+from helper import logger
 from holon import logger
 from holon.HolonicAgent import HolonicAgent
 from hearing.microphone import Microphone

@@ -7,7 +7,7 @@ import signal
 from holon import config
 import guide_config
 from hearing.trans import Transcriptionist
-import Helper
+import helper
 
 if __name__ == '__main__':
     # Helper.init_logging()
@@ -28,7 +28,7 @@ if __name__ == '__main__':
     cfg.log_dir = guide_config.log_dir    
     os.environ["OPENAI_API_KEY"] = guide_config.openai_api_key
     
-    Helper.init_logging(log_dir=cfg.log_dir, log_level=cfg.log_level)
+    helper.init_logging(log_dir=cfg.log_dir, log_level=cfg.log_level)
     multiprocessing.set_start_method('spawn')
 
     a = Transcriptionist(cfg)

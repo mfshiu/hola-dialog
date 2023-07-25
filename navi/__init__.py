@@ -1,8 +1,8 @@
 import ast
 import threading
 
-import Helper
-from Helper import logger
+import helper
+from helper import logger
 from holon.HolonicAgent import HolonicAgent
 from navi.VisualInput import VisualInput
 from navi.RouteFind import RouteFind
@@ -80,7 +80,7 @@ class Navigator(HolonicAgent):
 
 
 if __name__ == '__main__':
-    Helper.init_logging()
+    helper.init_logging()
     logger.info('***** Hearing start *****')
     a = Navigator()
     ans = a.__is_go('go')

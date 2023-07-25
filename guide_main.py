@@ -21,10 +21,8 @@ class GuideMain(HolonicAgent):
     def __init__(self, cfg):
         super().__init__(cfg)
         self.body_agents.append(DialogSystem(cfg))
-        # self.head_agents.append(Visual())
         self.head_agents.append(Hearing(cfg))
         self.head_agents.append(Voice(cfg))
-        # self.body_agents.append(Navigator(cfg))
         self.body_agents.append(Brain(cfg))
 
 

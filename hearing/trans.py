@@ -9,13 +9,13 @@ import torch
 
 import guide_config
 from holon.HolonicAgent import HolonicAgent
-import Helper
-from Helper import logger
+import helper
+from helper import logger
 
 
 class Transcriptionist(HolonicAgent):
     def __init__(self, cfg):
-        Helper.ensure_directory(guide_config.input_dir)
+        helper.ensure_directory(guide_config.input_dir)
         super().__init__(cfg)
 
 

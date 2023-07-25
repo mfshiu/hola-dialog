@@ -12,7 +12,6 @@ class Voice(HolonicAgent):
     def __init__(self, cfg):
         super().__init__(cfg)
         self.head_agents.append(Speaker(cfg))
-        # self.body_agents.append(VoiceToText(cfg))
 
 
     def _on_connect(self, client, userdata, flags, rc):

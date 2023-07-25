@@ -5,7 +5,7 @@ import threading
 
 import openai
 
-from Helper import logger
+from helper import logger
 
 # import tests.lab.lab_config
 

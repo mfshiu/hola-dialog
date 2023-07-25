@@ -6,12 +6,12 @@ import signal
 
 import guide_config
 from guide_main import GuideMain
-import Helper
+import helper
 from holon import config
 
 
 if __name__ == '__main__':
-    logger = Helper.init_logging(log_dir=guide_config.log_dir, log_level=guide_config.log_level)
+    logger = helper.init_logging(log_dir=guide_config.log_dir, log_level=guide_config.log_level)
     logger.info(f'***** GuideMain start *****')
 
     def signal_handler(signal, frame):
