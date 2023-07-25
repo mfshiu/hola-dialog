@@ -24,5 +24,5 @@ python start.py
 ````
 5. Start the transcription program in another Nvidia supported machine.
 ````
-python start.py
+python run_trans.py
 ````
