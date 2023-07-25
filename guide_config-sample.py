@@ -3,11 +3,11 @@ import logging
 mqtt_address = "localhost"
 mqtt_port = 1883
 mqtt_keepalive = 60
-mqtt_username = "eric"
-mqtt_password = "eric123"
+mqtt_username = "user"
+mqtt_password = "password"
 
 log_level = logging.DEBUG
-log_dir = "D:\\Work\\SDK\\agent-bdi\\tests\guide\\_log"
+log_dir = "C:\\temp\\_log"
 input_dir = '_input'
 output_dir = '_output'
 
