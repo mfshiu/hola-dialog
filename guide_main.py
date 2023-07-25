@@ -1,21 +1,13 @@
 import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
-import logging
-from logging.handlers import TimedRotatingFileHandler
-import signal
-
 from holon import config
 from holon.HolonicAgent import HolonicAgent
 
-# from visual.Visual import Visual
 from hearing import Hearing
 from voice import Voice
-# from navi import Navigator
-# from brain.navi import Navigator
 from brain import Brain
 from dialog import DialogSystem
-import guide_config
 
 class GuideMain(HolonicAgent):
     def __init__(self, cfg):
@@ -37,7 +29,5 @@ class GuideMain(HolonicAgent):
         if "guide.hearing.heared_text" == topic:
             if '系統關機' in data:
                 self.terminate()
-        # elif "dialog.nlu.triplet" == topic:
-        #     logging.info(f'### {data} ###')
 
         super()._on_topic(topic, data)

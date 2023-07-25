@@ -14,7 +14,6 @@ class Greeting(HolonicAgent):
     def _on_connect(self, client, userdata, flags, rc):
         client.subscribe("greeting.knowledge")
 
-        # self.publish('brain.register_subject', 'greeting')
         threading.Timer(1, lambda: self.publish('brain.register_subject', 'greeting')).start()
         super()._on_connect(client, userdata, flags, rc)
 
@@ -22,7 +21,6 @@ class Greeting(HolonicAgent):
     def _on_topic(self, topic, data):
         if "greeting.knowledge" == topic:
             knowledge = ast.literal_eval(data)
-            # logger.info(f'############### {knowledge}')
             if knowledge[0][1] == 'normal':
                 brain_helper.speak(self, f'Hello, have a good day.')
             elif knowledge[0][1] == 'happy':

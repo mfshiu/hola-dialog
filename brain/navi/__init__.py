@@ -18,12 +18,6 @@ class Navigator(HolonicAgent):
         super()._on_connect(client, userdata, flags, rc)
 
 
-    def __is_go(self, predict):
-        logger.debug(f"predict: {predict}")
-        result = ("go" == predict or "take" == predict)
-        return result
-
-
     def __set_state(self, new_state):
         self.state = new_state
         logger.debug(f"New state: {new_state}")

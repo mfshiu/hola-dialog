@@ -29,7 +29,6 @@ class Transcriptionist(HolonicAgent):
         if "hearing.voice" == msg.topic:
             filename = dt.now().strftime(f"voice-%m%d-%H%M-%S.wav")
             wave_path = os.path.join(guide_config.input_dir, filename)
-            # wave_path = dt.now().strftime("tests/_input/voice-%m%d-%H%M-%S.wav")
             with open(wave_path, "wb") as file:
                 file.write(msg.payload)
             self.wave_queue.put(wave_path)
@@ -42,9 +41,7 @@ class Transcriptionist(HolonicAgent):
         logger.warning(f'Device of Whisper:{device}')
         self.wave_queue = queue.Queue()
 
-        # whisper.DecodingOptions(language="zh")
         self.whisper_model = whisper.load_model("small", device=device)
-        # whisper_model = whisper.load_model("medium", device=device)
         logger.info(f'Whisper model is loaded.')
 
 
@@ -57,9 +54,7 @@ class Transcriptionist(HolonicAgent):
                 wave_path = self.wave_queue.get()
                 logger.debug(f'transcribe path:{wave_path}')
                 result = self.whisper_model.transcribe(wave_path)
-                # transcribed_text = str(result["text"].encode('utf-8'))[2:-1].strip()
                 transcribed_text = result["text"]
-                # print(f'running addr: {self._config.mqtt_address}')
                 self.publish("hearing.trans.text", transcribed_text)        
                 logger.info(f">>> \033[33m{transcribed_text}\033[0m")
                 if os.path.exists(wave_path):

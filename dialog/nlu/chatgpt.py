@@ -7,7 +7,6 @@ import openai
 
 from helper import logger
 
-# import tests.lab.lab_config
 
 def set_openai_api_key(key):
     print(f"set_openai_api_key: {key}")
@@ -36,9 +35,6 @@ def parse_to_triplet(user_prompt):
                 {"role": "user", "content": f"Analyze: '{user_prompt}'"},
             ]
     )
-    # print(f"completion: {completion}")
-    # print(f"completion: {completion['choices'][0]['message']}")
-    # print(f"completion: {completion['choices'][0]['message']['content']}")
 
     triplet = completion['choices'][0]['message']['content']
     result = triplet if '(' in triplet and ')' in triplet else None
@@ -52,8 +48,6 @@ def understand(prompt, last_sentence=None):
     global _object
     global _positivity
     global _classification
-
-    # print(f"openai.api_key: {openai.api_key}")
         
 
     def analyze_positivity(user_prompt):
@@ -74,15 +68,10 @@ Does that mean the user agrees or is positive? Just answer yes or no only."""
                 temperature=0,
                 max_tokens=5,
                 prompt=f"Is '{user_prompt}' a positive sentence or word? Just response yes or no."
-                # prompt=f"Is the sentence express positive or negative?\n{user_prompt}"
-                # prompt=f"Is the sentence express positive, negative or neutral?\n{user_prompt}"
             )
-
-        # print(f'completion: {completion}')
 
         global _positivity
         text = completion['choices'][0]['text']
-        #_positivity = 'pos' in text.lower()
         _positivity = 'yes' in text.lower()
 
 
@@ -254,7 +243,6 @@ Does that mean the user agrees or is positive? Just answer yes or no only."""
     for thread in threads:
         thread.join()
 
-    # return (_subject, _predict, _object)
     return _classification, (_subject, _predict, _object, _positivity)
 
 

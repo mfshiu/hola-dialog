@@ -14,7 +14,6 @@ class Brain(HolonicAgent):
 
 
     def _on_connect(self, client, userdata, flags, rc):
-        # client.subscribe("dialog.knowledge")
         super()._on_connect(client, userdata, flags, rc)
 
 

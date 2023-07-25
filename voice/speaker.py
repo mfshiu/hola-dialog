@@ -1,5 +1,4 @@
 from datetime import datetime as dt
-import logging
 import os
 
 from playsound import playsound
@@ -25,7 +24,6 @@ class Speaker(HolonicAgent):
             try:
                 filename = dt.now().strftime(f"wave-%m%d-%H%M-%S.wav")
                 filepath = os.path.join(guide_config.output_dir, filename)
-                # filepath = dt.now().strftime("tests/_output/wave-%m%d-%H%M-%S.wav")
                 with open(filepath, "wb") as file:
                     file.write(msg.payload)
                 logger.debug(f'playsound: {filepath}')

@@ -28,7 +28,6 @@ class Voice(HolonicAgent):
 
             filename = dt.now().strftime(f"speak-%m%d-%H%M-%S.wav")
             filepath = os.path.join(guide_config.output_dir, filename)
-            # filepath = dt.now().strftime("tests/_output/voice-%m%d-%H%M-%S.wav")
             logger.debug(f"speak_path:{filepath}")
             try:
                 self.tts.tts_to_file(text=data, file_path=filepath)

@@ -13,7 +13,7 @@ from helper import logger
 from holon.HolonicAgent import HolonicAgent
 import guide_config
 
-# 配置音频录制参数
+# Voice recording parameters
 CHUNK = 2048
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
@@ -47,7 +47,6 @@ class Microphone(HolonicAgent):
         for _ in range(0, int(RATE / CHUNK * 60)):
             if not self.is_running():
                 break
-            # print(".", end="")
             try:
                 sound_raw = audio_stream.read(CHUNK)
             except Exception as ex:
@@ -55,9 +54,9 @@ class Microphone(HolonicAgent):
                 break
 
             if not Microphone.__compute_frames_mean(sound_raw) < 200:
-                first_frames.append(sound_raw)  # 發現聲音
+                first_frames.append(sound_raw)  # found voice
                 if len(first_frames) > 2:
-                    break                       # 確定開始發聲
+                    break                       # ready to record
             elif len(first_frames):
                     first_frames.clear()
 
@@ -147,14 +146,7 @@ class Microphone(HolonicAgent):
     def _running(self):
         while self.is_running():
             try:
-                filepath = self._record2()
-                # if filepath:
-                    # with open(filepath, "rb") as file:
-                    #     file_content = file.read()
-                    # self.publish("hearing.microphone.voice", file_content)
-                    # os.remove(filepath)
-                    # logging.debug(f'Publish: microphone.wave_path: {filepath}')
-                    # self.publish("microphone.wave_path", filepath)
+                self._record2()
             except Exception as ex:
                 logger.exception(ex)
 
@@ -163,22 +155,3 @@ if __name__ == '__main__':
     logger.info('***** Microphone start *****')
     a = Microphone()
     a.start()
-
-
-# if __name__ == '__main__':
-#     logging.info('***** Microphone Test *****')
-
-#     a = Microphone()
-
-#     audio = pyaudio.PyAudio()
-#     audio_stream = audio.open(format=FORMAT, channels=CHANNELS,
-#                         rate=RATE, input=True,
-#                         frames_per_buffer=CHUNK)
-    
-#     first_frames = a._wait_voice(audio_stream)
-#     print(f"first_frames: {first_frames}")
-
-#     # 停止录制音频
-#     audio_stream.stop_stream()
-#     audio_stream.close()
-#     audio.terminate()

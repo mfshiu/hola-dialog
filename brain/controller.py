@@ -21,7 +21,6 @@ class Controller(HolonicAgent):
 
     def _on_topic(self, topic, data):
         if "dialog.knowledge" == topic:
-            # logger.warning(f"################## dialog.knowledge, data: {data}")
             if self.active_subject:
                 self.publish(f'{self.active_subject}.knowledge', data)
             else:

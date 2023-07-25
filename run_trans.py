@@ -10,8 +10,6 @@ from hearing.trans import Transcriptionist
 import helper
 
 if __name__ == '__main__':
-    # Helper.init_logging()
-    # logging.info('***** Main start *****')
     print('***** RunTrans start *****')
 
     def signal_handler(signal, frame):
