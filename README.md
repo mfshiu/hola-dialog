@@ -18,7 +18,11 @@ pip install -r requirements.txt
 ````
 cp guide_config.sample.py guide_config.py
 ````
-4. Start the main program.
+4. Start the main program in one Nvidia supported machine.
+````
+python start.py
+````
+5. Start the transcription program in another Nvidia supported machine.
 ````
 python start.py
 ````
