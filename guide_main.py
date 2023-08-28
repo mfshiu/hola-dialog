@@ -14,8 +14,8 @@ class GuideMain(HolonicAgent):
         super().__init__(cfg)
         self.body_agents.append(DialogSystem(cfg))
         self.head_agents.append(Hearing(cfg))
-        self.head_agents.append(Voice(cfg))
         self.body_agents.append(Brain(cfg))
+        self.head_agents.append(Voice(cfg))
 
 
     def _on_connect(self, client, userdata, flags, rc):

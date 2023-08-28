@@ -53,3 +53,8 @@ class Navigator(HolonicAgent):
             self.__process_navi(knowledge)
 
         super()._on_topic(topic, data)
+
+
+    def terminate(self):
+        self.publish('brain.unregister_subject', 'greeting')
+        super().terminate()
