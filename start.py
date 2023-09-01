@@ -10,7 +10,8 @@ from holon import config
 
 
 if __name__ == '__main__':
-    logger = helper.init_logging(log_dir=guide_config.log_dir, log_level=guide_config.log_level)
+    # logger = helper.init_logging(log_dir=guide_config.log_dir, log_level=guide_config.log_level)
+    logger = helper.get_logger()
     logger.info(f'***** GuideMain start *****')
 
     def signal_handler(signal, frame):

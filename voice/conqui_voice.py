@@ -8,7 +8,7 @@ from holon import logger
 from holon.HolonicAgent import HolonicAgent
 from voice.speaker import Speaker
 
-class Voice(HolonicAgent):
+class ConquiVoice(HolonicAgent):
     def __init__(self, cfg):
         super().__init__(cfg)
         self.head_agents.append(Speaker(cfg))

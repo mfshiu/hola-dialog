@@ -25,6 +25,7 @@ SILENCE_THRESHOLD = (RATE // CHUNK) * 0.28
 class Microphone(HolonicAgent):
     def __init__(self, cfg=None):
         helper.ensure_directory(guide_config.output_dir)
+        logger.debug(f"Init Microphone done.")
         super().__init__(cfg)
 
 

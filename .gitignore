@@ -132,3 +132,4 @@ guide_config.py
 _log/
 _input/
 _output/
+_test/
