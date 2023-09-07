@@ -58,7 +58,7 @@ class PlayHTVoice(HolonicAgent):
         return voice_url
 
 
-    def __speak(voice_url):
+    def __speak(self, voice_url):
         response = requests.get(voice_url)
         temp_filename = dt.now().strftime(f"speak-%m%d-%H%M-%S.mp3")
         temp_filepath = os.path.join(guide_config.output_dir, temp_filename)
@@ -67,6 +67,7 @@ class PlayHTVoice(HolonicAgent):
             f.write(response.content)
         playsound(temp_filepath)
         os.remove(temp_filepath)
+        self.publish("voice.spoken")
 
 
     def _on_connect(self, client, userdata, flags, rc):
@@ -77,7 +78,10 @@ class PlayHTVoice(HolonicAgent):
 
     def _on_topic(self, topic, data):
         if "voice.text" == topic:
-            voice_url = self.__tts(text=data)
-            self.__speak(voice_url)
+            try:
+                voice_url = self.__tts(text=data)
+                self.__speak(voice_url)
+            except Exception as ex:
+                logger.error(ex)
 
         super()._on_topic(topic, data)

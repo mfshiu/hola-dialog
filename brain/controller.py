@@ -23,6 +23,7 @@ class Controller(HolonicAgent):
         if "dialog.knowledge" == topic:
             if self.active_subject:
                 self.publish(f'{self.active_subject}.knowledge', data)
+                # logger.warning(f"Active subject: {self.active_subject}")
             else:
                 knowledge = ast.literal_eval(data)
                 if (subject := knowledge[0][0]) in self.registered_subjects:

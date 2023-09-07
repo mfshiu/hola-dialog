@@ -1,3 +1,6 @@
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
 #Note: you need to be using OpenAI Python v0.27.0 for the code below to work
 import json
 import os
@@ -5,6 +8,7 @@ import threading
 
 import openai
 
+import guide_config
 from helper import logger
 
 
@@ -243,10 +247,52 @@ Does that mean the user agrees or is positive? Just answer yes or no only."""
     for thread in threads:
         thread.join()
 
-    return _classification, (_subject, _predict, _object, _positivity)
+    return _classification, (_subject, _predict, _object, _positivity), (prompt, last_sentence)
+
+
+def response_greeting(user_greeting, is_happy=False):
+    # A person say: Howdy, partner! How's everything on your end?
+    # Response him/her with joy and excitement. Response only.    
+    logger.info(f"user_greeting: {user_greeting}")
+    model_name = "text-davinci-003"
+    # model_name = "gpt-4"
+
+    if is_happy:
+        completion = openai.Completion.create(
+            model=model_name,
+            temperature=1,
+            max_tokens=200,
+            prompt=f"""Your friend say: '{user_greeting}'
+Response him/her with joy and excitement. Just respond."""
+        )
+    else:
+        completion = openai.Completion.create(
+            model=model_name,
+            temperature=1,
+            max_tokens=200,
+            prompt=f"""Your friend say: '{user_greeting}'
+Response him/her. Just respond."""
+        )
+
+    response = completion['choices'][0]['text']
+    return response.replace('\n', '').strip()
 
 
 if __name__ == '__main__':
+    set_openai_api_key(guide_config.openai_api_key)
+    greeting = "What's cracking, pal?"
+    greeting = "Howdy, partner! How's everything on your end?"
+    greeting = "Hi, buddy! How have you been?"
+    greeting = "你好，很高興見到你."
+    greeting = "Hola, encantado de conocerte."
+
+    res = response_greeting(greeting)
+    print(f"\nNormal response:\n{res}")
+    res = response_greeting(greeting, is_happy=True)
+    print(f"\nHappy response:\n{res}")
+
+
+if __name__ == 'x__main__':
     print(f'***** {__file__} Start *****\n')
 
     set_openai_api_key(os.getenv('OPENAI_API_KEY'))

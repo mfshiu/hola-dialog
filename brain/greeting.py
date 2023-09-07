@@ -1,18 +1,29 @@
 import ast
 import threading
+import time
 
 from holon import logger
 from holon.HolonicAgent import HolonicAgent
 from brain import brain_helper
+from dialog.nlu import chatgpt
 
 
 class Greeting(HolonicAgent):
     def __init__(self, cfg):
+        self.is_active = False
         super().__init__(cfg)
+
+
+    def __set_active(self, active):
+        self.is_active = active
+        logger.info(f'Active: {self.is_active}')
 
 
     def _on_connect(self, client, userdata, flags, rc):
         client.subscribe("greeting.knowledge")
+        client.subscribe("voice.spoken")
+
+        self.__set_active(True)
 
         threading.Timer(1, lambda: self.publish('brain.register_subject', 'greeting')).start()
         super()._on_connect(client, userdata, flags, rc)
@@ -20,14 +31,21 @@ class Greeting(HolonicAgent):
 
     def _on_topic(self, topic, data):
         if "greeting.knowledge" == topic:
-            knowledge = ast.literal_eval(data)
-            if knowledge[0][1] == 'normal':
-                brain_helper.speak(self, f'Hello, have a good day.')
-            elif knowledge[0][1] == 'happy':
-                brain_helper.speak(self, f'Wonderful, very nice to meet you.')
+            if self.is_active:
+                self.__set_active(False)
+                knowledge = ast.literal_eval(data)
+                # logger.debug(f'Sentence: {knowledge[2][0]}')
+
+                happy = (knowledge[0][1] == 'happy')
+                response = chatgpt.response_greeting(user_greeting=knowledge[2][0], is_happy=happy)
+                brain_helper.speak(self, response)
+
+                self.publish('brain.subject_done')
             else:
-                logger.info(f'Uknown greeting mood.')
-            self.publish('brain.subject_done')
+                logger.warning(f'Waiting to finish speaking.')
+        elif "voice.spoken":
+            self.__set_active(True)
+
 
         super()._on_topic(topic, data)
 
