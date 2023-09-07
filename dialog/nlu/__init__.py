@@ -21,7 +21,7 @@ class Nlu(HolonicAgent):
         client.subscribe("hearing.trans.text")
         client.subscribe("voice.text")
 
-        chatgpt.set_openai_api_key(os.getenv('OPENAI_API_KEY'))
+        #chatgpt.set_openai_api_key(os.getenv('OPENAI_API_KEY'))
         
         super()._on_connect(client, userdata, flags, rc)
 

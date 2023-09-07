@@ -9,12 +9,15 @@ import threading
 import openai
 
 import guide_config
-from helper import logger
+import helper
 
 
-def set_openai_api_key(key):
-    print(f"set_openai_api_key: {key}")
-    openai.api_key = key
+logger = helper.get_logger()
+openai.api_key = os.environ['OPENAI_API_KEY']
+
+#def set_openai_api_key(key):
+#    logger.warning(f"set_openai_api_key: {key}")
+#    openai.api_key = key
 
 
 def parse_to_triplet(user_prompt):

@@ -1,11 +1,15 @@
 import ast
+import os
 import threading
 import time
 
-from holon import logger
+import helper
 from holon.HolonicAgent import HolonicAgent
 from brain import brain_helper
 from dialog.nlu import chatgpt
+
+
+logger = helper.get_logger()
 
 
 class Greeting(HolonicAgent):

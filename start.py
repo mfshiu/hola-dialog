@@ -4,6 +4,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 import signal
 
 import guide_config
+os.environ["OPENAI_API_KEY"] = guide_config.openai_api_key
 from guide_main import GuideMain
 import helper
 from holon import config
@@ -24,7 +25,6 @@ if __name__ == '__main__':
     cfg.mqtt_keepalive = guide_config.mqtt_keepalive
     cfg.mqtt_username = guide_config.mqtt_username
     cfg.mqtt_password = guide_config.mqtt_password
-    os.environ["OPENAI_API_KEY"] = guide_config.openai_api_key
 
     a = GuideMain(cfg)
     a.start()
