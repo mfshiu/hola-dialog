@@ -10,7 +10,9 @@ import torch
 import guide_config
 from holon.HolonicAgent import HolonicAgent
 import helper
-from helper import logger
+
+
+logger = helper.get_logger()
 
 
 class Transcriptionist(HolonicAgent):
