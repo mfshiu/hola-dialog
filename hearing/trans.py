@@ -41,6 +41,7 @@ class Transcriptionist(HolonicAgent):
         logger.warning(f'Device of Whisper:{device}')
         self.wave_queue = queue.Queue()
 
+        logger.warning(f'Loading model: small')
         self.whisper_model = whisper.load_model("small", device=device)
         logger.info(f'Whisper model is loaded.')
 

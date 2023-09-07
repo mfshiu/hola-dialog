@@ -17,8 +17,8 @@ class PlayHTVoice(HolonicAgent):
     def __tts(self, text):
         url = "https://play.ht/api/v2/tts"
         headers = {
-            "AUTHORIZATION": "Bearer 691a56835ae9425c9498ab18ca37c8f1",
-            "X-USER-ID": "RAE0rqSL3GRV3xgSEj4l33BTVC23",
+            "AUTHORIZATION": f"Bearer {guide_config.playht_secret_key}",
+            "X-USER-ID": f"{guide_config.playht_user_id}",
             "accept": "text/event-stream",
             "content-type": "application/json",
         }

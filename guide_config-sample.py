@@ -12,3 +12,6 @@ input_dir = '_input'
 output_dir = '_output'
 
 openai_api_key = 'openai_api_key'
+
+playht_user_id = "playht_user_id"
+playht_secret_key = "playht_secret_key"
