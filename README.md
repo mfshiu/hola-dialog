@@ -1,7 +1,7 @@
 # Hola Dialog
-This program uses the framework of [Agent BDI](https://github.com/mfshiu/agent-bdi) to demonstrate the features of robot dialogue, including voice input, semantic understanding, action execution and voice output. Voice input is translated into text using [OpenAI Whisper](https://github.com/openai/whisper); semantic understanding is performed through ChatGPT; voice output uses [conqui ai](https://github.com/coqui-ai/TTS) as test-to-speech. Action execution is mainly based on simulation, and ROS will be integrated in the future.
+This application utilizes the [Agent BDI framework](https://github.com/mfshiu/agent-bdi) to illustrate key functionalities in robotic dialogue, such as voice input, semantic interpretation, action execution, and voice output. For voice-to-text conversion, the program employs [OpenAI Whisper](https://github.com/openai/whisper), while semantic understanding is facilitated through ChatGPT. [Conqui AI](https://github.com/coqui-ai/TTS) is implemented for text-to-speech output. Currently, action execution is primarily simulation-based, with plans to incorporate ROS in subsequent iterations.
 
-The robot already have the ability to respond to greetings and simulate leading the way.
+The robot is already equipped with the capacity to respond to greetings and to simulate directional assistance.
 
 
 ## Setup
