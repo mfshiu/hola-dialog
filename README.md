@@ -4,24 +4,21 @@ This program uses the framework of [Agent BDI](https://github.com/mfshiu/agent-b
 The robot already have the ability to respond to greetings and simulate leading the way.
 
 
-## Installation
-1. Install the required packages.
+## Setup
+Initialize and activate the virtual environment, making sure to use the validated Python version 3.10.11. Subsequently, install the required packages. The operating system compatibility includes Ubuntu 20.04 and Ubuntu 22.04.
 ````
 sudo apt-get install portaudio19-dev
-````
-2. Install the required packages.
-````
 pip install -r requirements.txt
 ````
-3. Create guide_config.py, rewite settings such as mqtt and openai key. 
+Create guide_config.py, rewite settings such as mqtt and openai key. 
 ````
 cp guide_config.sample.py guide_config.py
 ````
-4. Start the main program in one Nvidia supported machine.
+Start the main program in one Nvidia supported machine.
 ````
 python start.py
 ````
-5. Start the transcription program in another Nvidia supported machine.
+Start the transcription program in another Nvidia supported machine.
 ````
 python run_trans.py
 ````
