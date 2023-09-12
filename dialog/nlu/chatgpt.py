@@ -282,7 +282,7 @@ Response him/her. Just respond."""
 
 
 if __name__ == '__main__':
-    set_openai_api_key(guide_config.openai_api_key)
+    # set_openai_api_key(guide_config.openai_api_key)
     greeting = "What's cracking, pal?"
     greeting = "Howdy, partner! How's everything on your end?"
     greeting = "Hi, buddy! How have you been?"
