@@ -22,3 +22,5 @@ Start the transcription program in another Nvidia supported machine.
 ````
 python run_trans.py
 ````
+## Distributed Architecture
+![localImage](./architecture.png)
