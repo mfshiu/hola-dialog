@@ -12,7 +12,7 @@ pip install -r requirements.txt
 ````
 Create guide_config.py, rewite settings such as mqtt and openai key. 
 ````
-cp guide_config.sample.py guide_config.py
+cp guide_config-sample.py guide_config.py
 ````
 Start the main program in one Nvidia supported machine.
 ````
