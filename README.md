@@ -22,5 +22,21 @@ Start the transcription program in another Nvidia supported machine.
 ````
 python run_trans.py
 ````
-## Distributed Architecture
-![localImage](./architecture.png)
+## Distributed architecture
+Distributed system architecture.
+![Distributed Architecture](./architecture.png)
+
+## Change agent
+### Change to Conqui-UI TTS
+Edit guide_main.py.
+````
+self.head_agents.append(ConquiVoice(cfg))
+# self.head_agents.append(PlayHTVoice(cfg))
+````
+### Replace ChatGPT with LLAMA 2
+Edit guide_main.py.
+````
+self.head_agents.append(ConquiVoice(cfg))
+# self.head_agents.append(PlayHTVoice(cfg))
+````
+
