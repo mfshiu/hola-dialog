@@ -33,8 +33,8 @@ class ConquiVoice(HolonicAgent):
                 self.tts.tts_to_file(text=data, file_path=filepath)
                 with open(filepath, "rb") as file:
                     file_content = file.read()
-                self.publish("voice.wave", file_content)
                 os.remove(filepath)
+                self.publish("voice.wave", file_content)
             except Exception as ex:
                 logger.exception(ex)
 

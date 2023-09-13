@@ -2,12 +2,17 @@ from datetime import datetime as dt
 import json
 import os
 import requests
+import threading
 
 from playsound import playsound
 
 import guide_config
-from holon import logger
+import helper
 from holon.HolonicAgent import HolonicAgent
+
+
+logger = helper.get_logger()
+
 
 class PlayHTVoice(HolonicAgent):
     def __init__(self, cfg):
@@ -53,7 +58,7 @@ class PlayHTVoice(HolonicAgent):
                     event = None
                     data = None
         else:
-            print(f"Request failed with status code: {response.status_code}")
+            logger.error(f"Request failed with status code: {response.status_code}")
 
         return voice_url
 
@@ -62,12 +67,10 @@ class PlayHTVoice(HolonicAgent):
         response = requests.get(voice_url)
         temp_filename = dt.now().strftime(f"speak-%m%d-%H%M-%S.mp3")
         temp_filepath = os.path.join(guide_config.output_dir, temp_filename)
-        # temp_filename = "_test/temp.mp3"
         with open(temp_filepath, "wb") as f:
             f.write(response.content)
         playsound(temp_filepath)
         os.remove(temp_filepath)
-        self.publish("voice.spoken")
 
 
     def _on_connect(self, client, userdata, flags, rc):
@@ -79,8 +82,15 @@ class PlayHTVoice(HolonicAgent):
     def _on_topic(self, topic, data):
         if "voice.text" == topic:
             try:
-                voice_url = self.__tts(text=data)
-                self.__speak(voice_url)
+                self.publish("voice.speaking")
+                
+                def play_voice():
+                    voice_url = self.__tts(text=data)
+                    self.__speak(voice_url)
+                    self.publish("voice.spoken")
+
+                threading.Thread(target=play_voice).start()
+
             except Exception as ex:
                 logger.error(ex)
 
