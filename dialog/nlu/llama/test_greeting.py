@@ -29,6 +29,10 @@ def main(
             {"role": "system", "content": "Always answer with friendly and warm"},
             {"role": "user", "content": "Hello, how are you."},
         ],
+        [
+            {"role": "system", "content": "Always answer with Haiku"},
+            {"role": "user", "content": "I am going to Paris, what should I see?"},
+        ],
     ]
     results = generator.chat_completion(
         dialogs,  # type: ignore
@@ -44,7 +48,7 @@ def main(
         # print(
         #     f"> {result['generation']['role'].capitalize()}: {result['generation']['content']}"
         # )
-        # print("\n==================================\n")
+        print("\n==================================\n")
 
 
 if __name__ == "__main__":
