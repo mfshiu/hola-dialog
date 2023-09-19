@@ -222,7 +222,7 @@ if __name__ == '__main__':
     # prompt = "I need to go to the bathroom."
     # last_sentence = "The windows is very dirty, clean it please."
     # prompt = "Ok, I will go."
-    prompt = "I wpuld like to go to the park."
+    prompt = "I would like to go to the park."
     result = LlamaNlu._understand(prompt)
     print(f"result: {result}")
 
