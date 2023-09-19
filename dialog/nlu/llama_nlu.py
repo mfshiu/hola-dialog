@@ -13,8 +13,8 @@ from holon import logger
 from holon.HolonicAgent import HolonicAgent
 
 
-# logger = helper.get_logger()
-logger = helper.init_logging(guide_config.log_dir, guide_config.log_level)
+logger = helper.get_logger()
+# logger = helper.init_logging(guide_config.log_dir, guide_config.log_level)
 
 
 class LlamaNlu(HolonicAgent):
