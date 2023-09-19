@@ -77,14 +77,6 @@ If a question does not make any sense, or is not factually coherent, explain why
             f"> {result['generation']['role'].capitalize()}: {result['generation']['content']}"
         )
         print("\n==================================\n")
-    # for dialog, result in zip(dialogs, results):
-    #     print(f"{result}")
-    #     # for msg in dialog:
-    #     #     print(f"{msg['role'].capitalize()}: {msg['content']}\n")
-    #     # print(
-    #     #     f"> {result['generation']['role'].capitalize()}: {result['generation']['content']}"
-    #     # )
-    #     print("\n==================================\n")
 
 
 if __name__ == "__main__":
