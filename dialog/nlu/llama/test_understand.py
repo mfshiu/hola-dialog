@@ -14,8 +14,6 @@ You will receive an instruction from a user.
 The user's directive will be separated by {classfy_delimiter} characters.
 Please categorize the instruction into major and minor categories.
 And provide your output in json format with key values: primary (major category) and secondary (minor category).
-Response json object only.
-minor property is the only one value, not an array item.
 
 Primary (main category): go somewhere, get items, clean up the mess, provide information, greeting or unsupported categories.
 
@@ -52,6 +50,16 @@ others
 talk to real people
 """
 
+
+def get_triplet_system_message(pos):
+    return f"""You are a sentence analyzer.
+Convert user's sentence to ({pos}) format following the rules below:
+1. Response only one word.
+2. If there is no subject, infer the subject.
+3. Respond ONLY in the requested format: ({pos}), without any other wrods.
+4. Answer in English"""
+
+
 def main(
     ckpt_dir: str,
     tokenizer_path: str,
@@ -68,6 +76,8 @@ def main(
         max_batch_size=max_batch_size,
     )
 
+    user_triplet_prompt = "I would like to go to a park."
+
     dialogs = [
         [
             {"role": "system", "content": "Is the user's text a positive sentence or word? Respond with either 'yes' or 'no.'"},
@@ -82,6 +92,18 @@ Is the user's response a positive sentence or word? Respond with either 'yes' or
             {"role": "system", "content": classfy_system_message},
             # {"role": "user", "content": "I would like to go to a park."},
             {"role": "user", "content": "The windows is very dirty."},
+        ],
+        [
+            {"role": "system", "content": get_triplet_system_message('subject')},
+            {"role": "user", "content": f"Analyze: \"{user_triplet_prompt}\", response only one word."},
+        ],
+        [
+            {"role": "system", "content": get_triplet_system_message('predict')},
+            {"role": "user", "content": f"Analyze: \"{user_triplet_prompt}\", response only one word."},
+        ],
+        [
+            {"role": "system", "content": get_triplet_system_message('object')},
+            {"role": "user", "content": f"Analyze: \"{user_triplet_prompt}\", response only one word."},
         ],
     ]
     results = generator.chat_completion(
