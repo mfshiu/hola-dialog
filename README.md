@@ -36,6 +36,19 @@ self.head_agents.append(ConquiVoice(cfg))
 ### Replace ChatGPT with LLAMA 2
 Edit dialog/nlu/__init__.py.
 ````
+# from dialog.nlu.chatgpt_nlu import ChatGptNlu
+# from dialog.nlu.llama_nlu import LlamaNlu
+
 # self.body_agents.append(ChatGptNlu(cfg))
-self.body_agents.append(LlamaNlu(cfg))
+# self.body_agents.append(LlamaNlu(cfg))
+````
+Start the llama agent in supported machine.
+````
+torchrun --nproc_per_node 1 run_llama.py
+````
+If you want use 13b model of Llama 2, edit dialog/nlu/llama_nlu.py, and start with 2 of parameter nproc_per_node
+````
+self.ckpt_dir = "dialog/nlu/llama/llama-2-13b-chat/"
+
+torchrun --nproc_per_node 2 run_llama.py
 ````
