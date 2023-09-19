@@ -46,6 +46,7 @@ class LlamaNlu(HolonicAgent):
         client.subscribe("nlu.greeting.text")
         
         logger.info("Llama is connected MQTT")
+        _ = self.__get_generator()
         super()._on_connect(client, userdata, flags, rc)
 
 
