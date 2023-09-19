@@ -121,11 +121,11 @@ talk to real people
                 {"role": "user", "content": f"Analyze: \"{prompt}\", response only one word."},
             ]
         predict_dialog = [
-                {"role": "system", "content": get_triplet_system_message('subject')},
+                {"role": "system", "content": get_triplet_system_message('predict')},
                 {"role": "user", "content": f"Analyze: \"{prompt}\", response only one word."},
             ]
         object_dialog = [
-                {"role": "system", "content": get_triplet_system_message('subject')},
+                {"role": "system", "content": get_triplet_system_message('object')},
                 {"role": "user", "content": f"Analyze: \"{prompt}\", response only one word."},
             ]
 
@@ -169,9 +169,16 @@ talk to real people
         except Exception:
             _classification = ('unsupported', 'unsupported')
 
-        _subject = contents[2] if '(' in contents[2] and ')' in contents[2] else None
-        _predict = contents[3] if '(' in contents[3] and ')' in contents[3] else None
-        _object = contents[4] if '(' in contents[4] and ')' in contents[4] else None
+        result = re.search(r'\((.*?)\)', contents[2])
+        _subject = result.group(1) if result else None
+        result = re.search(r'\((.*?)\)', contents[3])
+        _predict = result.group(1) if result else None
+        result = re.search(r'\((.*?)\)', contents[4])
+        _object = result.group(1) if result else None
+
+        # _subject = contents[2] if '(' in contents[2] and ')' in contents[2] else None
+        # _predict = contents[3] if '(' in contents[3] and ')' in contents[3] else None
+        # _object = contents[4] if '(' in contents[4] and ')' in contents[4] else None
         return _classification, (_subject, _predict, _object, _positivity), (prompt, last_sentence)
 
 
