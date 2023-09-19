@@ -26,10 +26,13 @@ class LlamaNlu(HolonicAgent):
         client.subscribe("nlu.understand.text")
         client.subscribe("nlu.greeting.text")
         
+        logger.debug("Llama is connected MQTT")
         super()._on_connect(client, userdata, flags, rc)
 
 
     def _on_topic(self, topic, data):
+        logger.debug(f"Llama is got topic: {topic}")
+        
         if "nlu.understand.text" == topic:
             prompt, last_sentence = ast.literal_eval(data)
             knowledge = LlamaNlu._understand(prompt, last_sentence)
