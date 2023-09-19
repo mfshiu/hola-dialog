@@ -146,7 +146,7 @@ talk to real people
         )
         results = generator.chat_completion(
             dialogs,  # type: ignore
-            max_gen_len=200,
+            # max_gen_len=200,
             temperature=0,
             top_p=.9,
         )
