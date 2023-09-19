@@ -27,8 +27,8 @@ def main(
     dialogs = [
         [
             {"role": "system", "content": "Always answer a short sentence without action."},
-            # {"role": "user", "content": "Hello, how are you."},
-            {"role": "user", "content": "Good morning, nice to meet you."},
+            {"role": "user", "content": "Hello, how are you."},
+            # {"role": "user", "content": "Good morning, nice to meet you."},
         ],
         # [
         #     {"role": "system", "content": "Always answer with Haiku"},
