@@ -94,11 +94,11 @@ talk to real people
 
         def get_triplet_system_message(pos):
             return f"""You are a sentence analyzer.
-        Convert user's sentence to ({pos}) format following the rules below:
-        1. Response only one word.
-        2. If there is no subject, infer the subject.
-        3. Respond ONLY in the requested format: ({pos}), without any other wrods.
-        4. Answer in English"""
+Convert user's sentence to ({pos}) format following the rules below:
+1. Response only one word.
+2. If there is no subject, infer the subject.
+3. Respond ONLY in the requested format: ({pos}), without any other wrods.
+4. Answer in English"""
 
 
         if last_sentence:
@@ -154,10 +154,10 @@ talk to real people
         contents = []
         for i, result in enumerate(results):
             content = result['generation']['content']
-            contents.append(content)
+            contents.append(content.lower())
             print(f"contents[{i}]: {content}")
 
-        _positivity = 'yes' in contents[0].lower()
+        _positivity = 'yes' in contents[0]
 
         try:
             json_text_match = re.search(r'{.*}', contents[1], re.DOTALL)
@@ -169,16 +169,24 @@ talk to real people
         except Exception:
             _classification = ('unsupported', 'unsupported')
 
-        result = re.search(r'\((.*?)\)', contents[2])
-        _subject = result.group(1) if result else None
-        result = re.search(r'\((.*?)\)', contents[3])
-        _predict = result.group(1) if result else None
-        result = re.search(r'\((.*?)\)', contents[4])
-        _object = result.group(1) if result else None
+        try:
+            result = re.search(r'\((.*?)\)', contents[2])
+            _subject = result.group(1) if result else None
+        except Exception:
+            _subject = None
 
-        # _subject = contents[2] if '(' in contents[2] and ')' in contents[2] else None
-        # _predict = contents[3] if '(' in contents[3] and ')' in contents[3] else None
-        # _object = contents[4] if '(' in contents[4] and ')' in contents[4] else None
+        try:
+            result = re.search(r'\((.*?)\)', contents[3])
+            _predict = result.group(1) if result else None
+        except Exception:
+            _predict = None
+
+        try:
+            result = re.search(r'\((.*?)\)', contents[4])
+            _object = result.group(1) if result else None
+        except Exception:
+            _object = None
+
         return _classification, (_subject, _predict, _object, _positivity), (prompt, last_sentence)
 
 
@@ -211,7 +219,9 @@ talk to real people
 
 
 if __name__ == '__main__':
-    prompt = "I need to go to the bathroom."
+    # prompt = "I need to go to the bathroom."
+    last_sentence = "The windows is very dirty, clean it please."
+    prompt = "Ok, I will go."
     result = LlamaNlu._understand(prompt)
     print(f"result: {result}")
 
