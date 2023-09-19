@@ -19,8 +19,26 @@ logger = helper.get_logger()
 
 
 class LlamaNlu(HolonicAgent):
+    __generator = None
+
+
     def __init__(self, cfg):
         super().__init__(cfg)
+
+
+    def __get_generator(self):
+        if not LlamaNlu.generator:
+            self.ckpt_dir = "dialog/nlu/llama/llama-2-13b-chat/"
+            self.tokenizer_path = "dialog/nlu/llama/tokenizer.model"
+            self.max_seq_len = 512
+            self.max_batch_size = 6
+            LlamaNlu.generator = Llama.build(
+                ckpt_dir=self.ckpt_dir,
+                tokenizer_path=self.tokenizer_path,
+                max_seq_len=self.max_seq_len,
+                max_batch_size=self.max_batch_size,
+            )
+        return LlamaNlu.generator
 
 
     def _on_connect(self, client, userdata, flags, rc):
@@ -48,17 +66,6 @@ class LlamaNlu(HolonicAgent):
 
     def _run_begin(self):
         super()._run_begin()
-
-        self.ckpt_dir = "dialog/nlu/llama/llama-2-13b-chat/"
-        self.tokenizer_path = "dialog/nlu/llama/tokenizer.model"
-        self.max_seq_len = 512
-        self.max_batch_size = 6
-        self.generator = Llama.build(
-            ckpt_dir=self.ckpt_dir,
-            tokenizer_path=self.tokenizer_path,
-            max_seq_len=self.max_seq_len,
-            max_batch_size=self.max_batch_size,
-        )
 
 
     def _understand(self, prompt, last_sentence=None):
@@ -185,7 +192,7 @@ Convert user's sentence to ({pos}) format following the rules below:
         ]
 
 
-        results = self.generator.chat_completion(
+        results = self.__get_generator().chat_completion(
             dialogs,  # type: ignore
             # max_gen_len=200,
             temperature=0,
@@ -242,7 +249,7 @@ Convert user's sentence to ({pos}) format following the rules below:
                 ],
             ]
 
-        results = self.generator.chat_completion(
+        results = self.__get_generator().chat_completion(
             dialogs,
             temperature=.8,
         )
