@@ -26,12 +26,7 @@ def main(
 
     dialogs = [
         [
-            {
-                "role": "system",
-                "content": """\
-You are a good friend of the user, and when the user sees you, they will greet you.
-Please respond to them with friendly and warm words.""",
-            },
+            {"role": "system", "content": "Always answer with friendly and warm"},
             {"role": "user", "content": "Hello, how are you."},
         ],
     ]
