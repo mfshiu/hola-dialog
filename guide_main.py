@@ -6,8 +6,7 @@ from holon.HolonicAgent import HolonicAgent
 
 from hearing import Hearing
 import helper
-# from helper import logger
-# from voice.conqui_voice import ConquiVoice
+from voice.conqui_voice import ConquiVoice
 from voice.playht_voice import PlayHTVoice
 from brain import Brain
 from dialog import DialogSystem

@@ -133,3 +133,5 @@ _log/
 _input/
 _output/
 _test/
+dialog/nlu/llama/llama-2-7b/
+dialog/nlu/llama/llama-2-7b-chat/

@@ -29,7 +29,11 @@ class PlayHTVoice(HolonicAgent):
         }
         data = {
             "text": text,
-            "voice": "larry"
+            "voice": "larry",
+            "quality": "premium",
+            "output_format": "mp3",
+            "speed": 1,
+            "sample_rate": 24000
         }
 
         voice_url = None
