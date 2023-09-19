@@ -34,6 +34,8 @@ self.head_agents.append(ConquiVoice(cfg))
 # self.head_agents.append(PlayHTVoice(cfg))
 ````
 ### Replace ChatGPT with LLAMA 2
+First, ensure *llama-2-7b-chat* or *llama-2-13b-chat* in *dialog/nlu/llama*.
+
 Edit dialog/nlu/__init__.py.
 ````
 # from dialog.nlu.chatgpt_nlu import ChatGptNlu
