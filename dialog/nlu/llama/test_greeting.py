@@ -30,10 +30,11 @@ def main(
             {"role": "user", "content": "Hello, how are you."},
             # {"role": "user", "content": "Good morning, nice to meet you."},
         ],
-        # [
-        #     {"role": "system", "content": "Always answer with Haiku"},
-        #     {"role": "user", "content": "I am going to Paris, what should I see?"},
-        # ],
+        [
+            {"role": "system", "content": "Always answer a short sentence with happy and exciting but without action."},
+            {"role": "user", "content": "Hello, how are you."},
+            # {"role": "user", "content": "Good morning, nice to meet you."},
+        ],
     ]
     results = generator.chat_completion(
         dialogs,  # type: ignore
