@@ -4,11 +4,9 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 import ast
 import json
 import os
-import threading
 
 from llama import Llama
 
-import guide_config
 import helper
 from holon import logger
 from holon.HolonicAgent import HolonicAgent
