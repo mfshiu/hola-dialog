@@ -76,11 +76,11 @@ def main(
 Is the user's response a positive sentence or word? Respond with either 'yes' or 'no.'"""},
             {"role": "user", "content": "I am not sure yet."},
         ],
-        # [
-        #     {"role": "system", "content": classfy_system_message},
-        #     # {"role": "user", "content": "I would like to go to a park."},
-        #     {"role": "user", "content": "The windows is very dirty."},
-        # ],
+        [
+            {"role": "system", "content": classfy_system_message},
+            # {"role": "user", "content": "I would like to go to a park."},
+            {"role": "user", "content": "The windows is very dirty."},
+        ],
     ]
     results = generator.chat_completion(
         dialogs,  # type: ignore
