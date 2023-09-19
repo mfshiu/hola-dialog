@@ -1,17 +1,20 @@
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
 import ast
 import json
 import os
 import threading
 
-import openai
+from llama import Llama
 
+import guide_config
 import helper
 from holon import logger
 from holon.HolonicAgent import HolonicAgent
 
 
 logger = helper.get_logger()
-openai.api_key = os.environ['OPENAI_API_KEY']
 
 
 class LlamaNlu(HolonicAgent):
@@ -29,7 +32,7 @@ class LlamaNlu(HolonicAgent):
     def _on_topic(self, topic, data):
         if "nlu.understand.text" == topic:
             prompt, last_sentence = ast.literal_eval(data)
-            knowledge = self._understand(prompt, last_sentence)
+            knowledge = LlamaNlu._understand(prompt, last_sentence)
             self.publish("nlu.understand.knowledge", str(knowledge))
         elif "nlu.greeting.text" == topic:
             user_greeting, is_happy = ast.literal_eval(data)
@@ -39,206 +42,126 @@ class LlamaNlu(HolonicAgent):
         super()._on_topic(topic, data)
         
 
-    def _understand(self, prompt, last_sentence=None):
-        global _subject
-        global _predict
-        global _object
-        global _positivity
-        global _classification
-            
-
-        def analyze_positivity(user_prompt):
-            logger.info(f"analyze_positivity: {user_prompt}, last_sentence:{last_sentence}")
-
-            if last_sentence:
-                completion = openai.Completion.create(
-                    model="text-davinci-003",
-                    temperature=0,
-                    max_tokens=5,
-                    prompt=f"""Guide: '{last_sentence}'
-    User: '{user_prompt}'
-    Does that mean the user agrees or is positive? Just answer yes or no only."""
-                )
-            else:
-                completion = openai.Completion.create(
-                    model="text-davinci-003",
-                    temperature=0,
-                    max_tokens=5,
-                    prompt=f"Is '{user_prompt}' a positive sentence or word? Just response yes or no."
-                )
-
-            global _positivity
-            text = completion['choices'][0]['text']
-            _positivity = 'yes' in text.lower()
+    ckpt_dir = "dialog/nlu/llama/llama-2-7b-chat/"
+    tokenizer_path = "dialog/nlu/llama/tokenizer.model"
+    max_seq_len = 512
+    max_batch_size = 6
 
 
-        def classify_instruction(user_prompt):
-            delimiter = "####"
-            system_message = f"""
-        You will receive an instruction from a user.
-        The user's directive will be separated by {delimiter} characters.
-        Please categorize the instruction into major and minor categories.
-        And provide your output in json format with key values: primary (major category) and secondary (minor category).
+    def _understand(prompt, last_sentence=None):
+        classfy_delimiter = "####"
+        classfy_system_message = f"""
+You will receive an instruction from a user.
+The user's directive will be separated by {classfy_delimiter} characters.
+Please categorize the instruction into major and minor categories.
+And provide your output in json format with key values: primary (major category) and secondary (minor category).
 
-        Primary (main category): go somewhere, get items, clean up the mess, provide information, greeting or unsupported categories.
+Primary (main category): go somewhere, get items, clean up the mess, provide information, greeting or unsupported categories.
 
-        minor categories of greeting:
-        normal
-        happy
+minor categories of greeting:
+normal
+happy
 
-        minor categories of go somewhere:
-        go to a park
-        go to a entrance
-        go to a toilet
-        go to a export
-        go to a restaurant
+minor categories of go somewhere:
+go to a park
+go to a entrance
+go to a toilet
+go to a export
+go to a restaurant
 
-        minor categories of get items:
-        take a book
-        take a glass of water
-        take the remote control
-        take a fruit
-        take some items
+minor categories of get items:
+take a book
+take a glass of water
+take the remote control
+take a fruit
+take some items
 
-        minor categories of clean up the mess:
-        clear the table
-        clean up the ground
-        clean windows
-        clean others 
+minor categories of clean up the mess:
+clear the table
+clean up the ground
+clean windows
+clean others 
 
-        minor categories of provide information:
-        product specification
-        price
-        reviews
-        restaurant suggestion
-        others
-        talk to real people
+minor categories of provide information:
+product specification
+price
+reviews
+restaurant suggestion
+others
+talk to real people
+"""
 
-        """
-            messages =  [  
-                {'role':'system', 'content': system_message},    
-                {'role':'user', 'content': f"{delimiter}{user_prompt}{delimiter}"},  
+
+        def get_triplet_system_message(pos):
+            return f"""You are a sentence analyzer.
+        Convert user's sentence to ({pos}) format following the rules below:
+        1. Response only one word.
+        2. If there is no subject, infer the subject.
+        3. Respond ONLY in the requested format: ({pos}), without any other wrods.
+        4. Answer in English"""
+
+
+        if last_sentence:
+            positive_dialog = [
+                {"role": "system", "content": f"""Someone say: '{last_sentence}'
+    Is the user's response a positive sentence or word? Respond with either 'yes' or 'no.'"""},
+                {"role": "user", "content": "I am not sure yet."},
+            ]
+        else:
+            positive_dialog = [
+                {"role": "system", "content": "Is the user's text a positive sentence or word? Respond with either 'yes' or 'no.'"},
+                {"role": "user", "content": f"{prompt}"},
+            ]
+        classfy_dialog = [
+            {"role": "system", "content": classfy_system_message},
+            {"role": "user", "content": f"{prompt}"},
+        ]
+        subject_dialog = [
+                {"role": "system", "content": get_triplet_system_message('subject')},
+                {"role": "user", "content": f"Analyze: \"{prompt}\", response only one word."},
+            ]
+        predict_dialog = [
+                {"role": "system", "content": get_triplet_system_message('subject')},
+                {"role": "user", "content": f"Analyze: \"{prompt}\", response only one word."},
+            ]
+        object_dialog = [
+                {"role": "system", "content": get_triplet_system_message('subject')},
+                {"role": "user", "content": f"Analyze: \"{prompt}\", response only one word."},
             ]
 
-            completion = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                temperature=0,
-                messages=messages
-            )
-            content = completion['choices'][0]['message']['content']
-            global _classification
-            _classification = tuple(json.loads(content).values())
+        dialogs = [
+            positive_dialog,
+            classfy_dialog,
+            subject_dialog,
+            predict_dialog,
+            object_dialog,
+        ]
 
 
-        def _process_result(result):
-            if result:
-                result = result.strip()
-                if result[0] == "(":
-                    result = result[1:]
-                if result[-1] == ")":
-                    result = result[:-1]
-            return result
-            
+        generator = Llama.build(
+            ckpt_dir=LlamaNlu.ckpt_dir,
+            tokenizer_path=LlamaNlu.tokenizer_path,
+            max_seq_len=LlamaNlu.max_seq_len,
+            max_batch_size=LlamaNlu.max_batch_size,
+        )
+        results = generator.chat_completion(
+            dialogs,  # type: ignore
+            max_gen_len=200,
+            temperature=0,
+            top_p=.9,
+        )
 
-        def parse_subject(user_prompt):
-            # print(f"parse_subject: {user_prompt}")
-            completion = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                temperature=0,
-                max_tokens=3,
-                messages=[
-                        {"role": "system", "content": "You are a sentence analyzer."},
-                        {"role": "assistant", "content": "Convert user's sentence to (subject) format following the rules below:"},
-                        {"role": "assistant", "content": "1. Response only one word."},
-                        {"role": "assistant", "content": "2. If there is no subject, infer the subject."},
-                        {"role": "assistant", "content": "3. Respond ONLY in the requested format: (subject), without any other wrods."},
-                        {"role": "assistant", "content": "4. Answer in English"},
-                        {"role": "system", "name": "example_user", "content": "I want to go to the park."},
-                        {"role": "system", "name": "example_assistant", "content": "(I)"},
-                        {"role": "system", "name": "example_user", "content": "He's going to the bathroom."},
-                        {"role": "system", "name": "example_assistant", "content": "(He)"},
-                        {"role": "system", "name": "example_user", "content": "我晚餐想吃麥當勞漢堡。"},
-                        {"role": "system", "name": "example_assistant", "content": "(I)"},
-                        {"role": "system", "name": "example_user", "content": "terminate system."},
-                        {"role": "system", "name": "example_assistant", "content": "(You)"},
-                        {"role": "user", "content": f"Analyze: \"{user_prompt}\", response only one word."},
-                    ]
-            )
+        contents = []
+        for result in results:
+            content = result['generation']['content']
+            contents.append(content)
+            print(f"{content}")
 
-            global _subject
-            _subject = _process_result(completion['choices'][0]['message']['content'])
-
-
-        def parse_predict(user_prompt):
-            # print(f"parse_predict: {user_prompt}")
-            completion = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                temperature=0,
-                max_tokens=3,
-                messages=[
-                        {"role": "system", "content": "You are a sentence analyzer."},
-                        {"role": "assistant", "content": "Convert user's sentence to (predict) format following the rules below:"},
-                        {"role": "assistant", "content": "1. Response only one word."},
-                        {"role": "assistant", "content": "2. If there is no predict, infer the subject."},
-                        {"role": "assistant", "content": "3. Respond ONLY in the requested format: (predict), without any other wrods."},
-                        {"role": "assistant", "content": "4. Answer in English"},
-                        {"role": "system", "name": "example_user", "content": "I want to go to the park."},
-                        {"role": "system", "name": "example_assistant", "content": "(go)"},
-                        {"role": "system", "name": "example_user", "content": "He's going to the bathroom."},
-                        {"role": "system", "name": "example_assistant", "content": "(go)"},
-                        {"role": "system", "name": "example_user", "content": "我晚餐想吃麥當勞漢堡。"},
-                        {"role": "system", "name": "example_assistant", "content": "(eat)"},
-                        {"role": "system", "name": "example_user", "content": "terminate system."},
-                        {"role": "system", "name": "example_assistant", "content": "(terminate)"},
-                        {"role": "user", "content": f"Analyze: \"{user_prompt}\", response only one word."},
-                    ]
-            )
-
-            global _predict
-            _predict = _process_result(completion['choices'][0]['message']['content'])
-            
-
-        def parse_object(user_prompt):
-            # print(f"parse_object: {user_prompt}")
-            completion = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                temperature=0,
-                max_tokens=4,
-                messages=[
-                        {"role": "system", "content": "You are a sentence analyzer."},
-                        {"role": "assistant", "content": "Convert user's sentence to (object) format following the rules below:"},
-                        {"role": "assistant", "content": "1. Response only one word."},
-                        {"role": "assistant", "content": "2. If there is no object, infer the object."},
-                        {"role": "assistant", "content": "3. Respond ONLY in the requested format: (object), without any other wrods."},
-                        {"role": "assistant", "content": "4. Answer in English"},
-                        {"role": "system", "name": "example_user", "content": "I want to go to the park."},
-                        {"role": "system", "name": "example_assistant", "content": "(park)"},
-                        {"role": "system", "name": "example_user", "content": "He's going to the bathroom."},
-                        {"role": "system", "name": "example_assistant", "content": "(bathroom)"},
-                        {"role": "system", "name": "example_user", "content": "我晚餐想吃麥當勞漢堡。"},
-                        {"role": "system", "name": "example_assistant", "content": "(McDonald's hamburger)"},
-                        {"role": "system", "name": "example_user", "content": "terminate system."},
-                        {"role": "system", "name": "example_assistant", "content": "(system)"},
-                        {"role": "user", "content": f"Analyze: \"{user_prompt}\", response only one word."},
-                    ]
-            )
-
-            global _object
-            _object = _process_result(completion['choices'][0]['message']['content'])
-        
-
-        threads = []
-        threads.append(threading.Thread(target=classify_instruction, args=(prompt,)))
-        threads.append(threading.Thread(target=parse_subject, args=(prompt,)))
-        threads.append(threading.Thread(target=parse_predict, args=(prompt,)))
-        threads.append(threading.Thread(target=parse_object, args=(prompt,)))
-        threads.append(threading.Thread(target=analyze_positivity, args=(prompt,)))
-
-        for thread in threads:
-            thread.start()
-        for thread in threads:
-            thread.join()
-
+        _positivity = 'yes' in contents[0].lower()
+        _classification = tuple(json.loads(contents[1]).values())
+        _subject = contents[2] if '(' in contents[2] and ')' in contents[2] else None
+        _predict = contents[3] if '(' in contents[3] and ')' in contents[3] else None
+        _object = contents[4] if '(' in contents[4] and ')' in contents[4] else None
         return _classification, (_subject, _predict, _object, _positivity), (prompt, last_sentence)
 
 
@@ -269,8 +192,8 @@ class LlamaNlu(HolonicAgent):
         response = completion['choices'][0]['text']
         return response.replace('\n', '').strip()
 
-# if __name__ == '__main__':
-#     Helper.init_logging()
-#     logger.info('***** Hearing start *****')
-#     a = Hearing()
-#     a.start()
+
+if __name__ == '__main__':
+    prompt = "I need to go to the bathroom."
+    result = LlamaNlu._understand(prompt)
+    print(f"result: {result}")
