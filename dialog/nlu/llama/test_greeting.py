@@ -26,7 +26,7 @@ def main(
 
     dialogs = [
         [
-            {"role": "system", "content": "Always answer with friendly and warm but short."},
+            {"role": "system", "content": "Always answer a short words with friendly and warm but no markdown text."},
             {"role": "user", "content": "Hello, how are you."},
         ],
         # [
