@@ -7,7 +7,7 @@ import signal
 import helper
 from holon import config
 import guide_config
-from dialog.nlu import LlamaNlu
+from dialog.nlu.llama_nlu import LlamaNlu
 
 
 logger = helper.get_logger()
