@@ -32,8 +32,8 @@ def main(
         ],
         [
             {"role": "system", "content": "Is the user's text a positive sentence or word? Respond with either 'yes' or 'no.'"},
-            {"role": "user", "content": "My dad want me to go to the school."},
-            {"role": "user", "content": "I do not like to study."},
+            {"role": "assistant", "content": "Your dad want you to go to the school."},
+            {"role": "user", "content": "Oh, no."},
             # {"role": "user", "content": "Good morning, nice to meet you."},
         ],
     ]
