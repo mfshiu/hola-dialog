@@ -227,7 +227,7 @@ Convert user's sentence to ({pos}) format following the rules below:
 
 if __name__ == '__main__':
     prompt = "Hello, nice to meet you."
-    result = LlamaNlu._response_greeting(prompt)
+    result = LlamaNlu._response_greeting(prompt, True)
     print(f"result: {result}")
 
 
