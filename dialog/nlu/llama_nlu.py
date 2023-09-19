@@ -101,6 +101,25 @@ Convert user's sentence to ({pos}) format following the rules below:
 4. Answer in English"""
 
 
+        def parse_classification(text):
+            try:
+                json_text_match = re.search(r'{.*}', text, re.DOTALL)
+                json_text = json_text_match.group(0)
+                # print(f"\n{json_text}\n")
+                primary, secondary = json.loads(json_text).values()
+                # print(f"primary: {primary}, secondary: {secondary[0]}")
+                if isinstance(secondary, dict):
+                    classification = (primary, list(secondary[0].values())[0])
+                elif isinstance(secondary, list):
+                    classification = (primary, secondary[0])
+                else:
+                    classification = (primary, secondary)
+            except Exception:
+                classification = ('unsupported', 'unsupported')
+
+            return classification
+        
+
         if last_sentence:
             positive_dialog = [
                 {"role": "system", "content": f"""Someone say: '{last_sentence}'
@@ -159,15 +178,7 @@ Convert user's sentence to ({pos}) format following the rules below:
 
         _positivity = 'yes' in contents[0]
 
-        try:
-            json_text_match = re.search(r'{.*}', contents[1], re.DOTALL)
-            json_text = json_text_match.group(0)
-            # print(f"\n{json_text}\n")
-            primary, secondary = json.loads(json_text).values()
-            # print(f"primary: {primary}, secondary: {secondary[0]}")
-            _classification = (primary, list(secondary[0].values())[0])
-        except Exception:
-            _classification = ('unsupported', 'unsupported')
+        _classification = parse_classification(contents[1])
 
         try:
             result = re.search(r'\((.*?)\)', contents[2])
