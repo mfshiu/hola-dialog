@@ -28,7 +28,7 @@ class LlamaNlu(HolonicAgent):
 
     def __get_generator(self):
         if not LlamaNlu.__generator:
-            self.ckpt_dir = "dialog/nlu/llama/llama-2-13b-chat/"
+            self.ckpt_dir = "dialog/nlu/llama/llama-2-7b-chat/"
             self.tokenizer_path = "dialog/nlu/llama/tokenizer.model"
             self.max_seq_len = 512
             self.max_batch_size = 6
