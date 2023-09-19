@@ -46,6 +46,12 @@ class LlamaNlu(HolonicAgent):
     tokenizer_path = "dialog/nlu/llama/tokenizer.model"
     max_seq_len = 512
     max_batch_size = 6
+    generator = Llama.build(
+        ckpt_dir=ckpt_dir,
+        tokenizer_path=tokenizer_path,
+        max_seq_len=max_seq_len,
+        max_batch_size=max_batch_size,
+    )
 
 
     def _understand(prompt, last_sentence=None):
@@ -157,17 +163,11 @@ Convert user's sentence to ({pos}) format following the rules below:
         ]
 
 
-        generator = Llama.build(
-            ckpt_dir=LlamaNlu.ckpt_dir,
-            tokenizer_path=LlamaNlu.tokenizer_path,
-            max_seq_len=LlamaNlu.max_seq_len,
-            max_batch_size=LlamaNlu.max_batch_size,
-        )
-        results = generator.chat_completion(
+        results = LlamaNlu.generator.chat_completion(
             dialogs,  # type: ignore
             # max_gen_len=200,
             temperature=0,
-            top_p=.9,
+            # top_p=.9,
         )
 
         contents = []
@@ -201,40 +201,40 @@ Convert user's sentence to ({pos}) format following the rules below:
         return _classification, (_subject, _predict, _object, _positivity), (prompt, last_sentence)
 
 
-    def _response_greeting(self, user_greeting, is_happy=False):
-        # A person say: Howdy, partner! How's everything on your end?
-        # Response him/her with joy and excitement. Response only.    
-        logger.info(f"user_greeting: {user_greeting}")
-        model_name = "text-davinci-003"
-        # model_name = "gpt-4"
-
+    def _response_greeting(user_greeting, is_happy=False):
         if is_happy:
-            completion = openai.Completion.create(
-                model=model_name,
-                temperature=1,
-                max_tokens=200,
-                prompt=f"""Your friend say: '{user_greeting}'
-    Response him/her with joy and excitement. Just respond."""
-            )
+            dialogs = [
+                [
+                    {"role": "system", "content": "Always respond with brief, upbeat sentences, but avoid using actions or emojis."},
+                    {"role": "user", "content": user_greeting},
+                ],
+            ]
         else:
-            completion = openai.Completion.create(
-                model=model_name,
-                temperature=1,
-                max_tokens=200,
-                prompt=f"""Your friend say: '{user_greeting}'
-    Response him/her. Just respond."""
-            )
+            dialogs = [
+                [
+                    {"role": "system", "content": "Always answer a short sentence without action."},
+                    {"role": "user", "content": user_greeting},
+                ],
+            ]
 
-        response = completion['choices'][0]['text']
+        results = LlamaNlu.generator.chat_completion(
+            dialogs,
+            temperature=.8,
+        )
+        response = results[0]['generation']['content']
         return response.replace('\n', '').strip()
 
 
 if __name__ == '__main__':
+    prompt = "Hello, nice to meet you."
+    result = LlamaNlu._response_greeting(prompt)
+    print(f"result: {result}")
+
+
+if __name__ == 'x__main__':
     # prompt = "I need to go to the bathroom."
     # last_sentence = "The windows is very dirty, clean it please."
     # prompt = "Ok, I will go."
     prompt = "I would like to go to the park."
     result = LlamaNlu._understand(prompt)
     print(f"result: {result}")
-
-
