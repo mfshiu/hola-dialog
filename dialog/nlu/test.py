@@ -1,32 +1,22 @@
-
-import json
 import re
 
-# Your text
-text = '''Sure, I can help you categorize the instruction you provided. Here is the output in JSON format:
-{
-"primary": "go somewhere",
-"secondary": [
-{
-"category": "go to a toilet"
-},
-{
-"category": "go to a restaurant"
-}
-]
-}'''
+text = '''Primary (main category): Greeting
+Secondary (minor category): Normal
 
-try:
-    json_text_match = re.search(r'{.*}', text, re.DOTALL)
-    json_text = json_text_match.group(0)
-    # print(f"\n{json_text}\n")
-    primary, secondary = json.loads(json_text).values()
-    # print(f"primary: {primary}")
-    # print(f"secondary: {secondary[0]}")
-    _classification = (primary, list(secondary[0].values())[0])
-except Exception:
-    _classification = ('unsupported', 'unsupported')
+So the primary category is "Greeting" and the secondary category is "Normal".'''
 
-print(_classification)
+# Regular expressions to match primary and secondary categories
+primary_re = r'Primary \(main category\):\s*(\w+)'
+secondary_re = r'Secondary \(minor category\):\s*(\w+)'
 
+# Search for primary and secondary categories
+primary_match = re.search(primary_re, text)
+secondary_match = re.search(secondary_re, text)
 
+# Extract and print the values
+if primary_match and secondary_match:
+    primary_category = primary_match.group(1)
+    secondary_category = secondary_match.group(1)
+    print(f'The primary category is "{primary_category}" and the secondary category is "{secondary_category}".')
+else:
+    print('Categories not found.')

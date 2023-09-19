@@ -116,16 +116,30 @@ Convert user's sentence to ({pos}) format following the rules below:
         def parse_classification(text):
             try:
                 json_text_match = re.search(r'{.*}', text, re.DOTALL)
-                json_text = json_text_match.group(0)
-                # print(f"\n{json_text}\n")
-                primary, secondary = json.loads(json_text).values()
-                # print(f"primary: {primary}, secondary: {secondary[0]}")
-                if isinstance(secondary, dict):
-                    classification = (primary, list(secondary[0].values())[0])
-                elif isinstance(secondary, list):
-                    classification = (primary, secondary[0])
+                if json_text_match:
+                    json_text = json_text_match.group(0)
+                    # print(f"\n{json_text}\n")
+                    primary, secondary = json.loads(json_text).values()
+                    # print(f"primary: {primary}, secondary: {secondary[0]}")
+                    if isinstance(secondary, dict):
+                        classification = (primary, list(secondary[0].values())[0])
+                    elif isinstance(secondary, list):
+                        classification = (primary, secondary[0])
+                    else:
+                        classification = (primary, secondary)
                 else:
-                    classification = (primary, secondary)
+                    primary_re = r'Primary \(main category\):\s*(\w+)'
+                    secondary_re = r'Secondary \(minor category\):\s*(\w+)'
+
+                    # Search for primary and secondary categories
+                    primary_match = re.search(primary_re, text)
+                    secondary_match = re.search(secondary_re, text)
+                    if primary_match and secondary_match:
+                        primary_category = primary_match.group(1)
+                        secondary_category = secondary_match.group(1)
+                        classification = (primary_category, secondary_category)
+                    else:
+                        classification = ('unsupported', 'unsupported')
             except Exception as ex:
                 logger.exception(ex)
                 classification = ('unsupported', 'unsupported')
@@ -179,8 +193,8 @@ Convert user's sentence to ({pos}) format following the rules below:
 
         contents = []
         for i, result in enumerate(results):
-            content = result['generation']['content']
-            contents.append(content.lower())
+            content = result['generation']['content'].lower()
+            contents.append(content)
             logger.debug(f"contents[{i}]: {content}")
 
         _positivity = 'yes' in contents[0]
