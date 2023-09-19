@@ -36,7 +36,7 @@ class LlamaNlu(HolonicAgent):
             self.publish("nlu.understand.knowledge", str(knowledge))
         elif "nlu.greeting.text" == topic:
             user_greeting, is_happy = ast.literal_eval(data)
-            response = self._response_greeting(user_greeting, is_happy)
+            response = LlamaNlu._response_greeting(user_greeting, is_happy)
             self.publish("nlu.greeting.response", response)
 
         super()._on_topic(topic, data)

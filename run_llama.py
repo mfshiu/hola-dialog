@@ -6,8 +6,8 @@ import signal
 
 from holon import config
 import guide_config
-from hearing.trans import Transcriptionist
-import helper
+from dialog.nlu import LlamaNlu
+
 
 if __name__ == '__main__':
     print('***** RunTrans start *****')
@@ -24,12 +24,12 @@ if __name__ == '__main__':
     cfg.mqtt_password = guide_config.mqtt_password
     cfg.log_level = guide_config.log_level
     cfg.log_dir = guide_config.log_dir    
-    os.environ["OPENAI_API_KEY"] = guide_config.openai_api_key
+    # os.environ["OPENAI_API_KEY"] = guide_config.openai_api_key
     
     # helper.init_logging(log_dir=cfg.log_dir, log_level=cfg.log_level)
     multiprocessing.set_start_method('spawn')
 
-    a = Transcriptionist(cfg)
+    a = LlamaNlu(cfg)
     a.start()
 
     # time.sleep(5)
