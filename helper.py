@@ -1,4 +1,3 @@
-from datetime import datetime
 import logging
 from logging.handlers import TimedRotatingFileHandler
 import os
