@@ -126,7 +126,8 @@ Convert user's sentence to ({pos}) format following the rules below:
                     classification = (primary, secondary[0])
                 else:
                     classification = (primary, secondary)
-            except Exception:
+            except Exception as ex:
+                logger.exception(ex)
                 classification = ('unsupported', 'unsupported')
 
             return classification
@@ -180,7 +181,7 @@ Convert user's sentence to ({pos}) format following the rules below:
         for i, result in enumerate(results):
             content = result['generation']['content']
             contents.append(content.lower())
-            print(f"contents[{i}]: {content}")
+            logger.debug(f"contents[{i}]: {content}")
 
         _positivity = 'yes' in contents[0]
 
@@ -189,19 +190,22 @@ Convert user's sentence to ({pos}) format following the rules below:
         try:
             result = re.search(r'\((.*?)\)', contents[2])
             _subject = result.group(1) if result else None
-        except Exception:
+        except Exception as ex:
+            logger.exception(ex)
             _subject = None
 
         try:
             result = re.search(r'\((.*?)\)', contents[3])
             _predict = result.group(1) if result else None
-        except Exception:
+        except Exception as ex:
+            logger.exception(ex)
             _predict = None
 
         try:
             result = re.search(r'\((.*?)\)', contents[4])
             _object = result.group(1) if result else None
-        except Exception:
+        except Exception as ex:
+            logger.exception(ex)
             _object = None
 
         return _classification, (_subject, _predict, _object, _positivity), (prompt, last_sentence)
@@ -235,7 +239,7 @@ Convert user's sentence to ({pos}) format following the rules below:
 if __name__ == '__main__':
     prompt = "Hello, nice to meet you."
     result = LlamaNlu._response_greeting(prompt, True)
-    print(f"result: {result}")
+    logger.debug(f"result: {result}")
 
 
 if __name__ == 'x__main__':
@@ -244,4 +248,4 @@ if __name__ == 'x__main__':
     # prompt = "Ok, I will go."
     prompt = "I would like to go to the park."
     result = LlamaNlu._understand(prompt)
-    print(f"result: {result}")
+    logger.debug(f"result: {result}")
