@@ -4,13 +4,17 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 import multiprocessing
 import signal
 
+import helper
 from holon import config
 import guide_config
 from dialog.nlu import LlamaNlu
 
 
+logger = helper.get_logger()
+
+
 if __name__ == '__main__':
-    print('***** RunTrans start *****')
+    print('***** Run LlamaNlu start *****')
 
     def signal_handler(signal, frame):
         print("signal_handler")
