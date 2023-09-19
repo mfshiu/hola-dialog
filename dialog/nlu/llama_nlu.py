@@ -35,29 +35,32 @@ class LlamaNlu(HolonicAgent):
 
         if "nlu.understand.text" == topic:
             prompt, last_sentence = ast.literal_eval(data)
-            knowledge = LlamaNlu._understand(prompt, last_sentence)
+            knowledge = self._understand(prompt, last_sentence)
             self.publish("nlu.understand.knowledge", str(knowledge))
         elif "nlu.greeting.text" == topic:
             user_greeting, is_happy = ast.literal_eval(data)
-            response = LlamaNlu._response_greeting(user_greeting, is_happy)
+            response = self._response_greeting(user_greeting, is_happy)
             self.publish("nlu.greeting.response", response)
 
         super()._on_topic(topic, data)
-        
-
-    ckpt_dir = "dialog/nlu/llama/llama-2-7b-chat/"
-    tokenizer_path = "dialog/nlu/llama/tokenizer.model"
-    max_seq_len = 512
-    max_batch_size = 6
-    generator = Llama.build(
-        ckpt_dir=ckpt_dir,
-        tokenizer_path=tokenizer_path,
-        max_seq_len=max_seq_len,
-        max_batch_size=max_batch_size,
-    )
 
 
-    def _understand(prompt, last_sentence=None):
+    def _run_begin(self):
+        super()._run_begin()
+
+        self.ckpt_dir = "dialog/nlu/llama/llama-2-7b-chat/"
+        self.tokenizer_path = "dialog/nlu/llama/tokenizer.model"
+        self.max_seq_len = 512
+        self.max_batch_size = 6
+        self.generator = Llama.build(
+            ckpt_dir=self.ckpt_dir,
+            tokenizer_path=self.tokenizer_path,
+            max_seq_len=self.max_seq_len,
+            max_batch_size=self.max_batch_size,
+        )
+
+
+    def _understand(self, prompt, last_sentence=None):
         classfy_delimiter = "####"
         classfy_system_message = f"""
 You will receive an instruction from a user.
@@ -166,7 +169,7 @@ Convert user's sentence to ({pos}) format following the rules below:
         ]
 
 
-        results = LlamaNlu.generator.chat_completion(
+        results = self.generator.chat_completion(
             dialogs,  # type: ignore
             # max_gen_len=200,
             temperature=0,
@@ -204,7 +207,7 @@ Convert user's sentence to ({pos}) format following the rules below:
         return _classification, (_subject, _predict, _object, _positivity), (prompt, last_sentence)
 
 
-    def _response_greeting(user_greeting, is_happy=False):
+    def _response_greeting(self, user_greeting, is_happy=False):
         if is_happy:
             dialogs = [
                 [
@@ -220,7 +223,7 @@ Convert user's sentence to ({pos}) format following the rules below:
                 ],
             ]
 
-        results = LlamaNlu.generator.chat_completion(
+        results = self.generator.chat_completion(
             dialogs,
             temperature=.8,
         )

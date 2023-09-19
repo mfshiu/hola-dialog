@@ -9,6 +9,10 @@ import guide_config
 from hearing.trans import Transcriptionist
 import helper
 
+
+logger = helper.get_logger()
+
+
 if __name__ == '__main__':
     print('***** RunTrans start *****')
 
