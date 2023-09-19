@@ -7,7 +7,6 @@ import os
 
 from llama import Llama
 
-import guide_config
 import helper
 from holon import logger
 from holon.HolonicAgent import HolonicAgent
