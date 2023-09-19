@@ -26,13 +26,13 @@ def main(
 
     dialogs = [
         [
-            {"role": "system", "content": "Always answer with friendly and warm"},
+            {"role": "system", "content": "Always answer with friendly and warm but short."},
             {"role": "user", "content": "Hello, how are you."},
         ],
-        [
-            {"role": "system", "content": "Always answer with Haiku"},
-            {"role": "user", "content": "I am going to Paris, what should I see?"},
-        ],
+        # [
+        #     {"role": "system", "content": "Always answer with Haiku"},
+        #     {"role": "user", "content": "I am going to Paris, what should I see?"},
+        # ],
     ]
     results = generator.chat_completion(
         dialogs,  # type: ignore
@@ -42,12 +42,15 @@ def main(
     )
 
     for dialog, result in zip(dialogs, results):
-        for msg in dialog:
-            print(f"{msg['role'].capitalize()}: {msg['content']}\n")
-        print(
-            f"> {result['generation']['role'].capitalize()}: {result['generation']['content']}"
-        )
-        print("\n==================================\n")
+        print(f"{result['generation']['content']}")
+
+    # for dialog, result in zip(dialogs, results):
+    #     for msg in dialog:
+    #         print(f"{msg['role'].capitalize()}: {msg['content']}\n")
+    #     print(
+    #         f"> {result['generation']['role'].capitalize()}: {result['generation']['content']}"
+    #     )
+    #     print("\n==================================\n")
 
 
 if __name__ == "__main__":
