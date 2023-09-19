@@ -48,7 +48,7 @@ class LlamaNlu(HolonicAgent):
     def _run_begin(self):
         super()._run_begin()
 
-        self.ckpt_dir = "dialog/nlu/llama/llama-2-7b-chat/"
+        self.ckpt_dir = "dialog/nlu/llama/llama-2-13b-chat/"
         self.tokenizer_path = "dialog/nlu/llama/tokenizer.model"
         self.max_seq_len = 512
         self.max_batch_size = 6
@@ -118,7 +118,7 @@ Convert user's sentence to ({pos}) format following the rules below:
                 json_text_match = re.search(r'{.*}', text, re.DOTALL)
                 if json_text_match:
                     json_text = json_text_match.group(0)
-                    # print(f"\n{json_text}\n")
+                    logger.debug(f"json_text: {json_text}")
                     primary, secondary = json.loads(json_text).values()
                     # print(f"primary: {primary}, secondary: {secondary[0]}")
                     if isinstance(secondary, dict):
