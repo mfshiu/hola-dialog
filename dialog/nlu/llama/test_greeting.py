@@ -31,7 +31,7 @@ def main(
             # {"role": "user", "content": "Good morning, nice to meet you."},
         ],
         [
-            {"role": "system", "content": "Always answer a short sentence with happy and exciting but without action and without emoji."},
+            {"role": "system", "content": "Always respond with brief, upbeat sentences, but avoid using actions or emojis."},
             {"role": "user", "content": "Hello, how are you."},
             # {"role": "user", "content": "Good morning, nice to meet you."},
         ],
