@@ -15,6 +15,7 @@ from holon.HolonicAgent import HolonicAgent
 
 logger = helper.get_logger()
 # logger = helper.init_logging(guide_config.log_dir, guide_config.log_level)
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 
 class LlamaNlu(HolonicAgent):
