@@ -14,7 +14,7 @@ logger = helper.get_logger()
 
 
 if __name__ == '__main__':
-    print('***** Run LlamaNlu start *****')
+    logger.info('***** Run LlamaNlu start *****')
 
     def signal_handler(signal, frame):
         print("signal_handler")
