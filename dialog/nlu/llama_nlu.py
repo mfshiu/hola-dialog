@@ -151,13 +151,18 @@ talk to real people
         )
 
         contents = []
-        for result in results:
+        for i, result in enumerate(results):
             content = result['generation']['content']
             contents.append(content)
-            print(f"{content}")
+            print(f"contents[{i}]: {content}")
 
         _positivity = 'yes' in contents[0].lower()
-        _classification = tuple(json.loads(contents[1]).values())
+        
+        try:
+            _classification = tuple(json.loads(contents[1]).values())
+        except json.JSONDecodeError:
+            _classification = ('unsupported', 'unsupported')
+
         _subject = contents[2] if '(' in contents[2] and ')' in contents[2] else None
         _predict = contents[3] if '(' in contents[3] and ')' in contents[3] else None
         _object = contents[4] if '(' in contents[4] and ')' in contents[4] else None
