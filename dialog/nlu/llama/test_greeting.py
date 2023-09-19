@@ -43,12 +43,13 @@ Please respond to them with friendly and warm words.""",
     )
 
     for dialog, result in zip(dialogs, results):
-        for msg in dialog:
-            print(f"{msg['role'].capitalize()}: {msg['content']}\n")
-        print(
-            f"> {result['generation']['role'].capitalize()}: {result['generation']['content']}"
-        )
-        print("\n==================================\n")
+        print(f"{result}")
+        # for msg in dialog:
+        #     print(f"{msg['role'].capitalize()}: {msg['content']}\n")
+        # print(
+        #     f"> {result['generation']['role'].capitalize()}: {result['generation']['content']}"
+        # )
+        # print("\n==================================\n")
 
 
 if __name__ == "__main__":
