@@ -222,6 +222,7 @@ Convert user's sentence to ({pos}) format following the rules below:
             temperature=.8,
         )
         response = results[0]['generation']['content']
+        response = helper.remove_emojis(response)
         return response.replace('\n', '').strip()
 
 
