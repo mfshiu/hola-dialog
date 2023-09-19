@@ -42,13 +42,20 @@ def main(
     )
 
     for dialog, result in zip(dialogs, results):
-        print(f"{result}")
-        # for msg in dialog:
-        #     print(f"{msg['role'].capitalize()}: {msg['content']}\n")
-        # print(
-        #     f"> {result['generation']['role'].capitalize()}: {result['generation']['content']}"
-        # )
+        for msg in dialog:
+            print(f"{msg['role'].capitalize()}: {msg['content']}\n")
+        print(
+            f"> {result['generation']['role'].capitalize()}: {result['generation']['content']}"
+        )
         print("\n==================================\n")
+    # for dialog, result in zip(dialogs, results):
+    #     print(f"{result}")
+    #     # for msg in dialog:
+    #     #     print(f"{msg['role'].capitalize()}: {msg['content']}\n")
+    #     # print(
+    #     #     f"> {result['generation']['role'].capitalize()}: {result['generation']['content']}"
+    #     # )
+    #     print("\n==================================\n")
 
 
 if __name__ == "__main__":
