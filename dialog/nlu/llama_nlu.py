@@ -121,7 +121,7 @@ Convert user's sentence to ({pos}) format following the rules below:
                 {"role": "user", "content": f"Analyze: \"{prompt}\", response only one word."},
             ]
         predict_dialog = [
-                {"role": "system", "content": get_triplet_system_message('predict')},
+                {"role": "system", "content": get_triplet_system_message('verb')},
                 {"role": "user", "content": f"Analyze: \"{prompt}\", response only one word."},
             ]
         object_dialog = [
