@@ -7,13 +7,13 @@ import json
 from holon import logger
 from holon.HolonicAgent import HolonicAgent
 # from dialog.nlu.chatgpt_nlu import ChatGptNlu
-from dialog.nlu.llama_nlu import LlamaNlu
+# from dialog.nlu.llama_nlu import LlamaNlu
 
 class Nlu(HolonicAgent):
     def __init__(self, cfg):
         super().__init__(cfg)
         # self.body_agents.append(ChatGptNlu(cfg))
-        self.body_agents.append(LlamaNlu(cfg))
+        # self.body_agents.append(LlamaNlu(cfg))
 
         self.last_sentence = ""
         # self.__set_speaking(False)

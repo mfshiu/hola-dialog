@@ -29,8 +29,8 @@ class GuideMain(HolonicAgent):
         client.subscribe("guide.hearing.heared_text")
         client.subscribe("dialog.nlu.triplet")
 
-        import guide_config
-        logger = helper.init_logging(log_dir=guide_config.log_dir, log_level=guide_config.log_level)
+        # import guide_config
+        # logger = helper.init_logging(log_dir=guide_config.log_dir, log_level=guide_config.log_level)
         logger.debug(f"Connect MQTT done.")
         super()._on_connect(client, userdata, flags, rc)
 
