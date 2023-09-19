@@ -8,6 +8,48 @@ import fire
 from llama import Llama
 
 
+classfy_delimiter = "####"
+classfy_system_message = f"""
+You will receive an instruction from a user.
+The user's directive will be separated by {classfy_delimiter} characters.
+Please categorize the instruction into major and minor categories.
+And provide your output in json format with key values: primary (major category) and secondary (minor category).
+
+Primary (main category): go somewhere, get items, clean up the mess, provide information, greeting or unsupported categories.
+
+minor categories of greeting:
+normal
+happy
+
+minor categories of go somewhere:
+go to a park
+go to a entrance
+go to a toilet
+go to a export
+go to a restaurant
+
+minor categories of get items:
+take a book
+take a glass of water
+take the remote control
+take a fruit
+take some items
+
+minor categories of clean up the mess:
+clear the table
+clean up the ground
+clean windows
+clean others 
+
+minor categories of provide information:
+product specification
+price
+reviews
+restaurant suggestion
+others
+talk to real people
+"""
+
 def main(
     ckpt_dir: str,
     tokenizer_path: str,
@@ -28,13 +70,15 @@ def main(
         [
             {"role": "system", "content": "Is the user's text a positive sentence or word? Respond with either 'yes' or 'no.'"},
             {"role": "user", "content": "I was so happy"},
-            # {"role": "user", "content": "Good morning, nice to meet you."},
         ],
         [
             {"role": "system", "content": """Someone say: 'Would you like to go to the Dragon park?'
 Is the user's response a positive sentence or word? Respond with either 'yes' or 'no.'"""},
             {"role": "user", "content": "I am not sure yet."},
-            # {"role": "user", "content": "Good morning, nice to meet you."},
+        ],
+        [
+            {"role": "system", "content": classfy_system_message},
+            {"role": "user", "content": "I would like to go to a park."},
         ],
     ]
     results = generator.chat_completion(
