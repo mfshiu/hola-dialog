@@ -30,12 +30,12 @@ def main(
             {"role": "user", "content": "I was so happy"},
             # {"role": "user", "content": "Good morning, nice to meet you."},
         ],
-        # [
-        #     {"role": "system", "content": "Is the user's text a positive sentence or word? Respond with either 'yes' or 'no.'"},
-        #     {"role": "assistant", "content": "Your dad want you to go to the school."},
-        #     {"role": "user", "content": "Oh, no."},
-        #     # {"role": "user", "content": "Good morning, nice to meet you."},
-        # ],
+        [
+            {"role": "system", "content": """Someone say: 'Would you like to go to the Dragon park?'
+Is the user's response a positive sentence or word? Respond with either 'yes' or 'no.'"""},
+            {"role": "user", "content": "I am not sure yet."},
+            # {"role": "user", "content": "Good morning, nice to meet you."},
+        ],
     ]
     results = generator.chat_completion(
         dialogs,  # type: ignore
