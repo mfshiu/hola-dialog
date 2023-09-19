@@ -3,6 +3,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 
 import ast
 import json
+import re
 import os
 
 from llama import Llama
@@ -159,7 +160,7 @@ talk to real people
         _positivity = 'yes' in contents[0].lower()
 
         try:
-            json_text_match = re.search(r'{.*}', text, re.DOTALL)
+            json_text_match = re.search(r'{.*}', contents[1], re.DOTALL)
             json_text = json_text_match.group(0)
             # print(f"\n{json_text}\n")
             primary, secondary = json.loads(json_text).values()
