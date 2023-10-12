@@ -1,14 +1,15 @@
 import logging
 
 broker_type = "MQTT"
-mqtt_address = "localhost"
+mqtt_address = "mqtt.address.com"
 mqtt_port = 1883
 mqtt_keepalive = 60
-mqtt_username = "user"
-mqtt_password = "password"
+mqtt_username = "mqtt_username"
+mqtt_password = "mqtt_password"
 
 log_level = logging.DEBUG
 log_dir = "_log"
+
 input_dir = '_input'
 output_dir = '_output'
 
