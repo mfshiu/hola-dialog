@@ -33,9 +33,9 @@ class Microphone(HolonicAgent):
         super().__init__(cfg)
 
 
-    def _run(self, config):
-        logger.warning("B"*100)
-        super()._run(config)
+    # def _run(self, config):
+    #     logger.warning("B"*100)
+    #     super()._run(config)
 
 
     def __set_speaking(self, is_speaking):

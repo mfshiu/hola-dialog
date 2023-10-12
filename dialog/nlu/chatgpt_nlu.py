@@ -127,6 +127,7 @@ class ChatGptNlu(HolonicAgent):
             content = completion['choices'][0]['message']['content']
             global _classification
             _classification = tuple(json.loads(content).values())
+            logger.warning(f"_classification: {_classification}")
 
 
         def _process_result(result):

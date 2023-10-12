@@ -21,9 +21,7 @@ if __name__ == '__main__':
     logger.info(f'***** GuideMain start *****')
 
     def signal_handler(signal, frame):
-        logger.warning("\n***************************")
-        logger.warning("* System was interrupted. *")
-        logger.warning("***************************\n")
+        logger.warning("System was interrupted.")
     signal.signal(signal.SIGINT, signal_handler)
 
     GuideMain(AbdiConfig(options={
