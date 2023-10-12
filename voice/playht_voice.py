@@ -71,20 +71,29 @@ class PlayHTVoice(HolonicAgent):
         response = requests.get(voice_url)
         temp_filename = dt.now().strftime(f"speak-%m%d-%H%M-%S.mp3")
         temp_filepath = os.path.join(guide_config.output_dir, temp_filename)
+        logger.debug(f"temp_filepath: {temp_filepath}")
         with open(temp_filepath, "wb") as f:
             f.write(response.content)
-        playsound(temp_filepath)
+            
+        try:
+            playsound(temp_filepath)
+        except Exception as ex:
+            logger.exception(ex)
+            
         os.remove(temp_filepath)
 
 
     def _on_connect(self, client, userdata, flags, rc):
         client.subscribe("voice.text")
+        
+        # Send an empty voice text with false retaintion to clean the retained messages in broker.
+        client.publish("voice.text", payload=None, retain=True)
 
         super()._on_connect(client, userdata, flags, rc)
 
 
     def _on_topic(self, topic, data):
-        if "voice.text" == topic:
+        if "voice.text" == topic and data:
             try:
                 self.publish("voice.speaking")
                 
