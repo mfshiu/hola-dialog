@@ -3,6 +3,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(
 
 from datetime import datetime as dt
 import threading
+import time
 
 import numpy as np
 import pyaudio
@@ -50,6 +51,8 @@ class Microphone(HolonicAgent):
 
 
     def _on_topic(self, topic, data):
+        logger.debug(f"Got topic: {topic}")
+        
         if "voice.speaking" == topic:
             self.__set_speaking(True)
         elif "voice.spoken" == topic:
@@ -73,7 +76,8 @@ class Microphone(HolonicAgent):
 
     def __wait_voice(self, audio_stream):
         first_frames = []
-        logger.debug("for 60 second...")
+        # logger.debug(f"for 60 second... (is speaking: {self.speaking})")
+        
         for _ in range(0, int(RATE / CHUNK * 60)):
             if not self._is_running() or self.speaking:
                 first_frames = []
@@ -92,7 +96,9 @@ class Microphone(HolonicAgent):
             elif len(first_frames):
                     first_frames.clear()
 
-        return first_frames if len(first_frames) else None
+        frames_len = len(first_frames)
+        # logger.debug(f'Frame length: {frames_len}')
+        return first_frames if frames_len else None
     
 
     def __record_to_silence(self, audio_stream):
@@ -130,7 +136,8 @@ class Microphone(HolonicAgent):
         frames_mean = 0
         if len(frames):
             frames_mean = total_mean // len(frames)
-            logger.debug(f'frames mean: {frames_mean}')
+            # logger.debug(f"frames: {frames}")
+            # logger.debug(f'frames mean: {frames_mean}')
 
         return frames, frames_mean
 
@@ -146,8 +153,8 @@ class Microphone(HolonicAgent):
         if frames:
             other_frames, frames_mean = self.__record_to_silence(audio_stream)
             frames.extend(other_frames)
-        # logging.debug(f'Average frames: {Microphone.__compute_frames_mean([byte for sublist in frames for byte in sublist])}')
-        # logging.debug(f'Frames: {frames}')
+        frames_len = len(frames) if frames else 0
+        # logger.debug(f'Frames mean: {frames_mean}, Frames length: {frames_len}')
 
         # Stop recording
         audio_stream.stop_stream()
@@ -182,7 +189,9 @@ class Microphone(HolonicAgent):
         logger.warning("AAAAAAAAAAAA")
         while self._is_running():
             try:
-                self._record()
+                wave_path = self._record()
+                if not wave_path:
+                    time.sleep(.1)
             except Exception as ex:
                 logger.exception(ex)
 

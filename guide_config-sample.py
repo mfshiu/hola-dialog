@@ -1,5 +1,6 @@
 import logging
 
+broker_type = "MQTT"
 mqtt_address = "localhost"
 mqtt_port = 1883
 mqtt_keepalive = 60

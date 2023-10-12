@@ -73,7 +73,12 @@ class PlayHTVoice(HolonicAgent):
         temp_filepath = os.path.join(app_config.output_dir, temp_filename)
         with open(temp_filepath, "wb") as f:
             f.write(response.content)
-        playsound(temp_filepath)
+            
+        try:
+            playsound(temp_filepath)
+        except Exception as ex:
+            logger.exception(ex)
+            
         os.remove(temp_filepath)
 
 
@@ -84,7 +89,7 @@ class PlayHTVoice(HolonicAgent):
 
 
     def _on_topic(self, topic, data):
-        if "voice.text" == topic:
+        if "voice.text" == topic and data:
             try:
                 self._publish("voice.speaking")
                 

@@ -23,6 +23,8 @@ class Greeting(HolonicAgent):
 
 
     def _on_topic(self, topic, data):
+        logger.debug(f"Got topic: {topic}")
+        
         if "greeting.knowledge" == topic:
             knowledge = ast.literal_eval(data)
 
