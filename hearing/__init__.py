@@ -1,9 +1,12 @@
-import os, sys
+import os
 
-from helper import logger
-from holon import logger
+import helper
 from holon.HolonicAgent import HolonicAgent
 from hearing.microphone import Microphone
+
+
+logger = helper.get_logger()
+
 
 class Hearing(HolonicAgent):
     def __init__(self, cfg):
@@ -11,10 +14,10 @@ class Hearing(HolonicAgent):
         self.head_agents.append(Microphone(cfg))
 
 
-    def _on_connect(self, client, userdata, flags, rc):
-        client.subscribe("microphone.wave_path")
+    def _on_connect(self):
+        self._subscribe("microphone.wave_path")
 
-        super()._on_connect(client, userdata, flags, rc)
+        super()._on_connect()
 
 
     def _on_topic(self, topic, data):
@@ -26,7 +29,7 @@ class Hearing(HolonicAgent):
                     file_content = file.read()
                 logger.debug(f'publish: hearing.voice')
                 os.remove(filepath)
-                self.publish("hearing.voice", file_content)
+                self._publish("hearing.voice", file_content)
             except Exception as ex:
                 logger.exception(ex)
 

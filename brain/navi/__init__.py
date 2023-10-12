@@ -11,11 +11,11 @@ class Navigator(HolonicAgent):
         self.state = 0
 
 
-    def _on_connect(self, client, userdata, flags, rc):
-        client.subscribe("go somewhere.knowledge")        
-        threading.Timer(2, lambda: self.publish('brain.register_subject', 'go somewhere')).start()
+    def _on_connect(self):
+        self._subscribe("go somewhere.knowledge")        
+        threading.Timer(2, lambda: self._publish('brain.register_subject', 'go somewhere')).start()
 
-        super()._on_connect(client, userdata, flags, rc)
+        super()._on_connect()
 
 
     def __set_state(self, new_state):
@@ -36,13 +36,13 @@ class Navigator(HolonicAgent):
                 def arrive():
                     self.__set_state(0)
                     brain_helper.speak(self, f"We arrive the Dragon {self.target}.")
-                    self.publish('brain.subject_done')
+                    self._publish('brain.subject_done')
                 threading.Timer(6, lambda: arrive()).start()
                 self.__set_state(2)
             else:
                 brain_helper.speak(self, f"Let me know if you want to go to the {self.target}.")
                 self.__set_state(0)
-                self.publish('brain.subject_done')
+                self._publish('brain.subject_done')
         elif self.state == 2:
             brain_helper.speak(self, f"We are on our way to Dragon {self.target}.")
 
@@ -56,5 +56,5 @@ class Navigator(HolonicAgent):
 
 
     def terminate(self):
-        self.publish('brain.unregister_subject', 'greeting')
+        self._publish('brain.unregister_subject', 'greeting')
         super().terminate()

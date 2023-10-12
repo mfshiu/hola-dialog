@@ -1,4 +1,3 @@
-from holon import logger
 from holon.HolonicAgent import HolonicAgent
 from brain.navi import Navigator
 from brain.greeting import Greeting
@@ -13,8 +12,8 @@ class Brain(HolonicAgent):
         self.body_agents.append(Greeting(cfg))
 
 
-    def _on_connect(self, client, userdata, flags, rc):
-        super()._on_connect(client, userdata, flags, rc)
+    def _on_connect(self):
+        super()._on_connect()
 
 
     def _on_topic(self, topic, data):

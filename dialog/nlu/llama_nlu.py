@@ -9,13 +9,10 @@ import os
 from llama import Llama
 
 import helper
-from holon import logger
 from holon.HolonicAgent import HolonicAgent
 
 
 logger = helper.get_logger()
-# logger = helper.init_logging(guide_config.log_dir, guide_config.log_level)
-# os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 
 class LlamaNlu(HolonicAgent):
@@ -41,13 +38,13 @@ class LlamaNlu(HolonicAgent):
         return LlamaNlu.__generator
 
 
-    def _on_connect(self, client, userdata, flags, rc):
-        client.subscribe("nlu.understand.text")
-        client.subscribe("nlu.greeting.text")
+    def _on_connect(self):
+        self._subscribe("nlu.understand.text")
+        self._subscribe("nlu.greeting.text")
         
         logger.info("Llama is connected MQTT")
         _ = self.__get_generator()
-        super()._on_connect(client, userdata, flags, rc)
+        super()._on_connect()
 
 
     def _on_topic(self, topic, data):
@@ -56,11 +53,11 @@ class LlamaNlu(HolonicAgent):
         if "nlu.understand.text" == topic:
             prompt, last_sentence = ast.literal_eval(data)
             knowledge = self._understand(prompt, last_sentence)
-            self.publish("nlu.understand.knowledge", str(knowledge))
+            self._publish("nlu.understand.knowledge", str(knowledge))
         elif "nlu.greeting.text" == topic:
             user_greeting, is_happy = ast.literal_eval(data)
             response = self._response_greeting(user_greeting, is_happy)
-            self.publish("nlu.greeting.response", response)
+            self._publish("nlu.greeting.response", response)
 
         super()._on_topic(topic, data)
 

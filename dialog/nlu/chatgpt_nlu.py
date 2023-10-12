@@ -6,7 +6,6 @@ import threading
 import openai
 
 import helper
-from holon import logger
 from holon.HolonicAgent import HolonicAgent
 
 
@@ -19,53 +18,24 @@ class ChatGptNlu(HolonicAgent):
         super().__init__(cfg)
 
 
-    def _on_connect(self, client, userdata, flags, rc):
-        client.subscribe("nlu.understand.text")
-        client.subscribe("nlu.greeting.text")
+    def _on_connect(self):
+        self._subscribe("nlu.understand.text")
+        self._subscribe("nlu.greeting.text")
         
-        super()._on_connect(client, userdata, flags, rc)
+        super()._on_connect()
 
 
     def _on_topic(self, topic, data):
         if "nlu.understand.text" == topic:
             prompt, last_sentence = ast.literal_eval(data)
             knowledge = self._understand(prompt, last_sentence)
-            self.publish("nlu.understand.knowledge", str(knowledge))
+            self._publish("nlu.understand.knowledge", str(knowledge))
         elif "nlu.greeting.text" == topic:
             user_greeting, is_happy = ast.literal_eval(data)
             response = self._response_greeting(user_greeting, is_happy)
-            self.publish("nlu.greeting.response", response)
+            self._publish("nlu.greeting.response", response)
 
         super()._on_topic(topic, data)
-
-
-    def __parse_to_triplet(self, user_prompt):
-        # print(f"parse_to_triplet: {user_prompt}")
-        completion = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            temperature=0,
-            messages=[
-                    {"role": "system", "content": "You are a sentence analyzer."},
-                    {"role": "assistant", "content": "Convert user's sentence to (subject, predict, object) format following the rules below:"},
-                    {"role": "assistant", "content": "1. Subject, predict and object use only one word."},
-                    {"role": "assistant", "content": "2. Predict uses infinitive verb, if it is a verb."},
-                    {"role": "assistant", "content": "3. Respond ONLY in the requested format: (subject, predict, object), without any other wrods."},
-                    {"role": "system", "name": "example_user", "content": "I want to go to the park."},
-                    {"role": "system", "name": "example_assistant", "content": "(I, go, park)"},
-                    {"role": "system", "name": "example_user", "content": "I'm going to the bathroom."},
-                    {"role": "system", "name": "example_assistant", "content": "(I, go, bathroom)"},
-                    {"role": "system", "name": "example_user", "content": "我晚餐想吃麥當勞漢堡。"},
-                    {"role": "system", "name": "example_assistant", "content": "(I, eat, McDonald's)"},
-                    {"role": "system", "name": "example_user", "content": "terminate system."},
-                    {"role": "system", "name": "example_assistant", "content": "(, terminate, system)"},
-                    {"role": "user", "content": f"Analyze: '{user_prompt}'"},
-                ]
-        )
-
-        triplet = completion['choices'][0]['message']['content']
-        result = triplet if '(' in triplet and ')' in triplet else None
-        # print(f"result: {result}, triplet: {triplet}")
-        return result
         
 
     def _understand(self, prompt, last_sentence=None):

@@ -4,34 +4,38 @@ import os
 
 import json
 
-from holon import logger
+import helper
 from holon.HolonicAgent import HolonicAgent
-# from dialog.nlu.chatgpt_nlu import ChatGptNlu
+from dialog.nlu.chatgpt_nlu import ChatGptNlu
 # from dialog.nlu.llama_nlu import LlamaNlu
+
+
+logger = helper.get_logger()
+
  
 class Nlu(HolonicAgent):
     def __init__(self, cfg):
         super().__init__(cfg)
-        # self.body_agents.append(ChatGptNlu(cfg))
+        self.body_agents.append(ChatGptNlu(cfg))
         # self.body_agents.append(LlamaNlu(cfg))
 
         self.last_sentence = ""
         # self.__set_speaking(False)
 
 
-    def _on_connect(self, client, userdata, flags, rc):
-        client.subscribe("hearing.trans.text")
-        client.subscribe("nlu.understand.knowledge")
+    def _on_connect(self):
+        self._subscribe("hearing.trans.text")
+        self._subscribe("nlu.understand.knowledge")
         
-        super()._on_connect(client, userdata, flags, rc)
+        super()._on_connect()
 
 
     def _on_topic(self, topic, data):
         if "hearing.trans.text" == topic:
             logger.debug(f"{self.name} heared '{data}'")
-            self.publish("nlu.understand.text", str((data, self.last_sentence)))
+            self._publish("nlu.understand.text", str((data, self.last_sentence)))
         elif "nlu.understand.knowledge" == topic:
-            self.publish("dialog.knowledge", data)
+            self._publish("dialog.knowledge", data)
             logger.info(f"Understand: {data}")
 
         super()._on_topic(topic, data)

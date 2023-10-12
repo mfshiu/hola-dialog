@@ -4,8 +4,7 @@ from datetime import datetime as dt
 from TTS.api import TTS
 
 import helper
-import guide_config
-from holon import logger
+import app_config
 from holon.HolonicAgent import HolonicAgent
 from voice.speaker import Speaker
 
@@ -19,29 +18,29 @@ class ConquiVoice(HolonicAgent):
         self.head_agents.append(Speaker(cfg))
 
 
-    def _on_connect(self, client, userdata, flags, rc):
-        client.subscribe("voice.text")
+    def _on_connect(self):
+        self._subscribe("voice.text")
 
         self.models = TTS.list_models()
         # logger.debug(f"TTS models: {self.models}")
         # self.tts = TTS(model_name=self.models[7], gpu=True)
         self.tts = TTS(model_name="tts_models/zh-CN/baker/tacotron2-DDC-GST", gpu=True)
 
-        super()._on_connect(client, userdata, flags, rc)
+        super()._on_connect()
 
 
     def _on_topic(self, topic, data):
         if "voice.text" == topic:
 
             filename = dt.now().strftime(f"speak-%m%d-%H%M-%S.wav")
-            filepath = os.path.join(guide_config.output_dir, filename)
+            filepath = os.path.join(app_config.output_dir, filename)
             logger.debug(f"speak_path:{filepath}")
             try:
                 self.tts.tts_to_file(text=data, file_path=filepath)
                 with open(filepath, "rb") as file:
                     file_content = file.read()
                 os.remove(filepath)
-                self.publish("voice.wave", file_content)
+                self._publish("voice.wave", file_content)
             except Exception as ex:
                 logger.exception(ex)
 

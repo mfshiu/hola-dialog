@@ -128,7 +128,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-guide_config.py
+app_config.py
 _log/
 _input/
 _output/
