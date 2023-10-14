@@ -9,10 +9,6 @@ logger = logging.getLogger('ABDI')
 __log_init = False
 
 
-def xxx():
-    pass
-
-
 def ensure_directory(dir_path):
     if not os.path.exists(dir_path):
         os.mkdir(dir_path)
