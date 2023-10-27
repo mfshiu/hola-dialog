@@ -7,6 +7,7 @@ from hearing import Hearing
 import helper
 from voice.conqui_voice import ConquiVoice
 from voice.playht_voice import PlayHTVoice
+from voice.playht_voice_v1 import PlayHTVoiceV1
 from brain import Brain
 from dialog import DialogSystem
 
@@ -21,7 +22,7 @@ class GuideMain(HolonicAgent):
         self.body_agents.append(DialogSystem(cfg))
         self.head_agents.append(Hearing(cfg))
         self.body_agents.append(Brain(cfg))
-        self.head_agents.append(PlayHTVoice(cfg))
+        self.head_agents.append(PlayHTVoiceV1(cfg))
 
         logger.debug(f"Init GuideMain done.")
 

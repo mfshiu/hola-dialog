@@ -51,7 +51,7 @@ class Microphone(HolonicAgent):
 
 
     def _on_topic(self, topic, data):
-        logger.debug(f"Got topic: {topic}")
+        # logger.debug(f"Got topic: {topic}")
         
         if "voice.speaking" == topic:
             self.__set_speaking(True)
@@ -162,8 +162,9 @@ class Microphone(HolonicAgent):
         audio.terminate()
 
         wave_path = None
+        # logger.debug(f"self.speaking: {self.speaking}, frames_mean: {frames_mean}")
         if self._is_running() or not self.speaking:
-            if frames and len(frames) >= SILENCE_THRESHOLD//2 and frames_mean >= 500:
+            if frames and len(frames) >= SILENCE_THRESHOLD//2: #and frames_mean >= 500:
                 
                 def write_wave_file(wave_path, wave_data):
                     logger.info(f"Write to file: {wave_path}...")
@@ -186,7 +187,6 @@ class Microphone(HolonicAgent):
 
 
     def _running(self):
-        logger.warning("AAAAAAAAAAAA")
         while self._is_running():
             try:
                 wave_path = self._record()
