@@ -28,6 +28,7 @@ class RosTest(HolonicAgent):
 
     def _run_interval(self):
         logger.info(f"interval: {dt.now()}")
+        self._publish(topic="ros01", payload=f"ROS: {dt.now()}")
 
 
 
