@@ -10,11 +10,28 @@ from holon.HolonicAgent import HolonicAgent
 logger = helper.get_logger()
 
 
-class RosTest(HolonicAgent):
+class RosPublishTest(HolonicAgent):
     def __init__(self, cfg):
         super().__init__(cfg)
 
-        logger.debug(f"Init RosTest done.")
+
+    def _on_connect(self):
+        logger.debug(f"Connect to broker done.")
+        super()._on_connect()
+
+
+    def _on_topic(self, topic, data):
+        super()._on_topic(topic, data)
+
+
+    def _run_interval(self):
+        logger.info(f"interval: {dt.now()}")
+        self._publish(topic="ros01", payload=f"ROS: {dt.now()}")
+
+
+class RosSubscribeTest(HolonicAgent):
+    def __init__(self, cfg):
+        super().__init__(cfg)
 
 
     def _on_connect(self):
@@ -40,7 +57,7 @@ if __name__ == '__main__':
         logger.warning("System was interrupted.")
     signal.signal(signal.SIGINT, signal_handler)
 
-    RosTest(AbdiConfig(options={
+    RosPublishTest(AbdiConfig(options={
         "broker_type": app_config.broker_type,
 
         "input_dir": app_config.input_dir,

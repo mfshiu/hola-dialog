@@ -22,7 +22,7 @@ class Speaker(HolonicAgent):
         super()._on_connect()
 
 
-    def _on_message(self, client, db, msg):
+    def _on_message(self, msg):
         if "voice.wave" == msg.topic:
             try:
                 filename = dt.now().strftime(f"wave-%m%d-%H%M-%S.wav")

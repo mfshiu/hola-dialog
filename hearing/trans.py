@@ -27,7 +27,7 @@ class Transcriptionist(HolonicAgent):
         super()._on_connect()
 
 
-    def _on_message(self, client, db, msg):
+    def _on_message(self, msg):
         if "hearing.voice" == msg.topic:
             filename = dt.now().strftime(f"voice-%m%d-%H%M-%S.wav")
             wave_path = os.path.join(app_config.input_dir, filename)
