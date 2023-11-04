@@ -1,9 +1,3 @@
-import os
-# import os, sys
-# sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))))
-
-import json
-
 import helper
 from holon.HolonicAgent import HolonicAgent
 from dialog.nlu.chatgpt_nlu import ChatGptNlu
@@ -20,7 +14,6 @@ class Nlu(HolonicAgent):
         # self.body_agents.append(LlamaNlu(cfg))
 
         self.last_sentence = ""
-        # self.__set_speaking(False)
 
 
     def _on_connect(self):
@@ -30,19 +23,12 @@ class Nlu(HolonicAgent):
         super()._on_connect()
 
 
-    def _on_topic(self, topic, data):
+    def _on_message(self, topic:str, payload):
+        data = payload.decode('utf-8', 'ignore')
+        
         if "hearing.trans.text" == topic:
             logger.debug(f"{self.name} heared '{data}'")
             self._publish("nlu.understand.text", str((data, self.last_sentence)))
         elif "nlu.understand.knowledge" == topic:
             self._publish("dialog.knowledge", data)
             logger.info(f"Understand: {data}")
-
-        super()._on_topic(topic, data)
-
-
-# if __name__ == '__main__':
-#     Helper.init_logging()
-#     logger.info('***** Hearing start *****')
-#     a = Hearing()
-#     a.start()

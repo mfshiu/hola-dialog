@@ -20,10 +20,6 @@ class RosPublishTest(HolonicAgent):
         super()._on_connect()
 
 
-    def _on_topic(self, topic, data):
-        super()._on_topic(topic, data)
-
-
     def _run_interval(self):
         logger.info(f"interval: {dt.now()}")
         self._publish(topic="ros01", payload=f"ROS: {dt.now()}")
@@ -37,10 +33,6 @@ class RosSubscribeTest(HolonicAgent):
     def _on_connect(self):
         logger.debug(f"Connect to broker done.")
         super()._on_connect()
-
-
-    def _on_topic(self, topic, data):
-        super()._on_topic(topic, data)
 
 
     def _run_interval(self):

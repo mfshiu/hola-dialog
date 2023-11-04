@@ -29,7 +29,9 @@ class ConquiVoice(HolonicAgent):
         super()._on_connect()
 
 
-    def _on_topic(self, topic, data):
+    def _on_message(self, topic:str, payload):
+        data = self._convert_to_text(payload)
+
         if "voice.text" == topic:
 
             filename = dt.now().strftime(f"speak-%m%d-%H%M-%S.wav")
@@ -43,8 +45,6 @@ class ConquiVoice(HolonicAgent):
                 self._publish("voice.wave", file_content)
             except Exception as ex:
                 logger.exception(ex)
-
-        super()._on_topic(topic, data)
 
 
 '''

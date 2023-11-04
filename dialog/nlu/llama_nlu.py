@@ -1,10 +1,6 @@
-import os, sys
-sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-
 import ast
 import json
 import re
-import os
 
 from llama import Llama
 
@@ -47,8 +43,8 @@ class LlamaNlu(HolonicAgent):
         super()._on_connect()
 
 
-    def _on_topic(self, topic, data):
-        logger.info(f"Llama is got topic: {topic}")
+    def _on_message(self, topic:str, payload):
+        data = payload.decode('utf-8', 'ignore')
 
         if "nlu.understand.text" == topic:
             prompt, last_sentence = ast.literal_eval(data)
@@ -58,8 +54,6 @@ class LlamaNlu(HolonicAgent):
             user_greeting, is_happy = ast.literal_eval(data)
             response = self._response_greeting(user_greeting, is_happy)
             self._publish("nlu.greeting.response", response)
-
-        super()._on_topic(topic, data)
 
 
     def _run_begin(self):
@@ -254,18 +248,4 @@ Convert user's sentence to ({pos}) format following the rules below:
         response = results[0]['generation']['content']
         response = helper.remove_emojis(response)
         return response.replace('\n', '').strip()
-
-
-if __name__ == '__main__':
-    prompt = "Hello, nice to meet you."
-    result = LlamaNlu._response_greeting(prompt, True)
-    logger.debug(f"result: {result}")
-
-
-if __name__ == 'x__main__':
-    # prompt = "I need to go to the bathroom."
-    # last_sentence = "The windows is very dirty, clean it please."
-    # prompt = "Ok, I will go."
-    prompt = "I would like to go to the park."
-    result = LlamaNlu._understand(prompt)
-    logger.debug(f"result: {result}")
+    

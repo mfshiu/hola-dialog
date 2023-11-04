@@ -30,12 +30,8 @@ class Microphone(HolonicAgent):
         helper.ensure_directory(cfg.get("output_dir"))
         self.__set_speaking(False)
         logger.debug(f"Init Microphone done.")
+        
         super().__init__(cfg)
-
-
-    # def _run(self, config):
-    #     logger.warning("B"*100)
-    #     super()._run(config)
 
 
     def __set_speaking(self, is_speaking):
@@ -50,15 +46,13 @@ class Microphone(HolonicAgent):
         super()._on_connect()
 
 
-    def _on_topic(self, topic, data):
-        # logger.debug(f"Got topic: {topic}")
+    def _on_message(self, topic:str, payload):
+        data = self._convert_to_text(payload)
         
         if "voice.speaking" == topic:
             self.__set_speaking(True)
         elif "voice.spoken" == topic:
             self.__set_speaking(False)
-
-        super()._on_topic(topic, data)
 
 
     def __compute_frames_mean(frames):

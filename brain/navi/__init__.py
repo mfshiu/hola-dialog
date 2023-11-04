@@ -47,12 +47,12 @@ class Navigator(HolonicAgent):
             brain_helper.speak(self, f"We are on our way to Dragon {self.target}.")
 
 
-    def _on_topic(self, topic, data):
+    def _on_message(self, topic:str, payload):
+        data = self._convert_to_text(payload)
+        
         if "go somewhere.knowledge" == topic:
             knowledge = ast.literal_eval(data)
             self.__process_navi(knowledge)
-
-        super()._on_topic(topic, data)
 
 
     def terminate(self):

@@ -88,7 +88,9 @@ class PlayHTVoice(HolonicAgent):
         super()._on_connect()
 
 
-    def _on_topic(self, topic, data):
+    def _on_message(self, topic:str, payload):
+        data = self._convert_to_text(payload)
+
         if "voice.text" == topic and data:
             try:
                 self._publish("voice.speaking")
@@ -102,5 +104,3 @@ class PlayHTVoice(HolonicAgent):
 
             except Exception as ex:
                 logger.error(ex)
-
-        super()._on_topic(topic, data)

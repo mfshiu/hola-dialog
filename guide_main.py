@@ -33,11 +33,3 @@ class GuideMain(HolonicAgent):
 
         logger.debug(f"Connect MQTT done.")
         super()._on_connect()
-
-
-    def _on_topic(self, topic, data):
-        if "guide.hearing.heared_text" == topic:
-            if '系統關機' in data:
-                self.terminate()
-
-        super()._on_topic(topic, data)

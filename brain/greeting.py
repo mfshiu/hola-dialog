@@ -22,8 +22,8 @@ class Greeting(HolonicAgent):
         super()._on_connect()
 
 
-    def _on_topic(self, topic, data):
-        logger.debug(f"Got topic: {topic}")
+    def _on_message(self, topic:str, payload):
+        data = self._convert_to_text(payload)
         
         if "greeting.knowledge" == topic:
             knowledge = ast.literal_eval(data)
@@ -34,8 +34,6 @@ class Greeting(HolonicAgent):
         elif "nlu.greeting.response" == topic:
             brain_helper.speak(self, data)
             self._publish('brain.subject_done')
-
-        super()._on_topic(topic, data)
 
 
     def terminate(self):

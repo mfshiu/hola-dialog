@@ -22,13 +22,13 @@ class Speaker(HolonicAgent):
         super()._on_connect()
 
 
-    def _on_message(self, msg):
-        if "voice.wave" == msg.topic:
+    def _on_message(self, topic:str, payload):
+        if "voice.wave" == topic:
             try:
                 filename = dt.now().strftime(f"wave-%m%d-%H%M-%S.wav")
                 filepath = os.path.join(app_config.output_dir, filename)
                 with open(filepath, "wb") as file:
-                    file.write(msg.payload)
+                    file.write(payload)
                 logger.debug(f'playsound: {filepath}')
                 playsound(filepath)
                 os.remove(filepath)

@@ -20,7 +20,9 @@ class Hearing(HolonicAgent):
         super()._on_connect()
 
 
-    def _on_topic(self, topic, data):
+    def _on_message(self, topic:str, payload):
+        data = self._convert_to_text(payload)
+        
         if "microphone.wave_path" == topic:
             filepath = data
             logger.debug(f"wave_path:{filepath}")
@@ -32,5 +34,3 @@ class Hearing(HolonicAgent):
                 self._publish("hearing.voice", file_content)
             except Exception as ex:
                 logger.exception(ex)
-
-        super()._on_topic(topic, data)

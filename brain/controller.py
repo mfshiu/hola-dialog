@@ -22,7 +22,9 @@ class Controller(HolonicAgent):
         super()._on_connect()
 
 
-    def _on_topic(self, topic, data):
+    def _on_message(self, topic:str, payload):
+        data = self._convert_to_text(payload)
+        
         if "dialog.knowledge" == topic:
             if self.active_subject:
                 self._publish(f'{self.active_subject}.knowledge', data)
@@ -46,5 +48,3 @@ class Controller(HolonicAgent):
         elif "brain.subject_done" == topic:
             logger.info(f"subject: {self.active_subject} is done.")
             self.active_subject = None
-            
-        super()._on_topic(topic, data)

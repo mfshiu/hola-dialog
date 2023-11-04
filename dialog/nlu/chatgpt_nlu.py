@@ -25,7 +25,9 @@ class ChatGptNlu(HolonicAgent):
         super()._on_connect()
 
 
-    def _on_topic(self, topic, data):
+    def _on_message(self, topic:str, payload):
+        data = payload.decode('utf-8', 'ignore')
+
         if "nlu.understand.text" == topic:
             prompt, last_sentence = ast.literal_eval(data)
             knowledge = self._understand(prompt, last_sentence)
@@ -34,8 +36,6 @@ class ChatGptNlu(HolonicAgent):
             user_greeting, is_happy = ast.literal_eval(data)
             response = self._response_greeting(user_greeting, is_happy)
             self._publish("nlu.greeting.response", response)
-
-        super()._on_topic(topic, data)
         
 
     def _understand(self, prompt, last_sentence=None):
@@ -268,9 +268,3 @@ class ChatGptNlu(HolonicAgent):
 
         response = completion['choices'][0]['text']
         return response.replace('\n', '').strip()
-
-# if __name__ == '__main__':
-#     Helper.init_logging()
-#     logger.info('***** Hearing start *****')
-#     a = Hearing()
-#     a.start()
