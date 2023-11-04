@@ -1,10 +1,9 @@
-# Version: 1
+#!/usr/bin/env python
 
 import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 import signal
-
 
 from abdi_config import AbdiConfig
 import app_config
